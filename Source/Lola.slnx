@@ -1,0 +1,11 @@
+<Solution>
+  <Properties Name="Visual Studio">
+    <Property Name="OpenWith" Value="17" />
+  </Properties>
+  <Folder Name="/1 Source/">
+    <Project Path="Lola\Lola.csproj" />
+  </Folder>
+  <Folder Name="/2 Tests/">
+    <Project Path="Lola.UnitTests\Lola.UnitTests.csproj" />
+  </Folder>
+</Solution>
