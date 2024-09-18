@@ -2,7 +2,7 @@
 
 public class PersonasCommand(IHasChildren parent)
     : Command<PersonasCommand>(parent, "Personas", n => {
-        n.Description = "Manage Agent's Personas.";
+        n.Description = "Manage Agent's Personas";
         n.AddCommand<PersonaListCommand>();
         n.AddCommand<PersonaGenerateCommand>();
         n.AddCommand<PersonaViewCommand>();

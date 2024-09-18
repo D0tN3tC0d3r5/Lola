@@ -41,38 +41,42 @@ public class PersonaUpdateCommand(IHasChildren parent, IPersonaHandler handler)
 
     private async Task SetUpAsync(PersonaEntity persona, CancellationToken ct) {
         // Update Name
-        var newName = await Input.BuildTextPrompt<string>($"Current Name: {persona.Name}\nEnter the new name for the persona (or press Enter to keep current):")
+        persona.Name = await Input.BuildTextPrompt<string>($"Enter the new name for the persona (or press Enter to keep current):")
+                                  .WithDefault(persona.Name)
+                                  .AsRequired()
                                   .AddValidation(name => PersonaEntity.ValidateName(name, handler))
                                   .ShowAsync(ct);
-        if (!string.IsNullOrEmpty(newName)) {
-            persona.Name = newName;
-        }
 
         // Update Role
-        var newRole = await Input.BuildTextPrompt<string>($"Current Role: {persona.Role}\nEnter the new role for the persona (or press Enter to keep current):")
-                                  .AddValidation(role => PersonaEntity.ValidateRole(role))
+        persona.Role = await Input.BuildTextPrompt<string>($"Enter the new role for the persona (or press Enter to keep current):")
+                                  .WithDefault(persona.Role)
+                                  .AsRequired()
+                                  .AddValidation(PersonaEntity.ValidateRole)
                                   .ShowAsync(ct);
-        if (!string.IsNullOrEmpty(newRole)) {
-            persona.Role = newRole;
-        }
 
         // Update Goals
-        Output.WriteLine("Current Goals:");
-        foreach (var goal in persona.Goals) {
-            Output.WriteLine($" - {goal}");
+        Output.WriteLine($"This persone has {persona.Goals.Count} goals.");
+        for (var i = 0; i < persona.Goals.Count; i++) {
+            Output.WriteLine($"- Goal {i + 1}:");
+            Output.WriteLine(persona.Goals[i]);
+            var goalAction = await Input.BuildTextPrompt<string>("Would you like to change this goal?")
+                                        .AddChoices(["Keep", "Change", "Remove"])
+                                        .WithDefault("Keep")
+                                        .ShowAsync(ct);
+            if (goalAction == "Remove") persona.Goals[i] = "[Remove]";
+            if (goalAction is "Keep" or "Remove") continue;
+            persona.Goals[i] = await Input.BuildMultilinePrompt("What is the updated goal?")
+                                          .Validate(PersonaEntity.ValidateGoal)
+                                          .ShowAsync(ct);
         }
-        var updateGoals = await Input.ConfirmAsync("Would you like to update the goals?", ct);
-        if (updateGoals) {
-            persona.Goals.Clear();
-            var goal = await Input.BuildMultilinePrompt("Enter the new goals for the persona (separate multiple goals with new lines):")
-                                  .Validate(PersonaEntity.ValidateGoal)
-                                  .ShowAsync(ct);
-            persona.Goals.AddRange(goal.Replace("\r", "").Split("\n"));
-        }
+        foreach (var goalToRemove in persona.Goals.Where(i => i == "[Remove]"))
+            persona.Goals.Remove(goalToRemove);
 
         // Update Expertise
-        var newExpertise = await Input.BuildTextPrompt<string>($"Current Expertise: {persona.Expertise}\nEnter the new expertise for the persona (or press Enter to keep current):")
-                                       .ShowAsync(ct);
+        var newExpertise = await Input.BuildTextPrompt<string>($"Enter the new expertise for the persona (or press Enter to keep current):")
+                                      .AsRequired()
+                                      .WithDefault(persona.Expertise)
+                                      .ShowAsync(ct);
         if (!string.IsNullOrEmpty(newExpertise)) {
             persona.Expertise = newExpertise;
         }

@@ -47,23 +47,30 @@ public class ModelUpdateCommand(IHasChildren parent, IModelHandler modelHandler,
                                   .ShowAsync(ct);
         model.ProviderKey = provider.Key;
         model.Key = await Input.BuildTextPrompt<string>("Enter the model identifier:")
+                               .WithDefault(model.Key)
                                .AddValidation(key => ModelEntity.ValidateKey(key, modelHandler))
                                .ShowAsync(ct);
         model.Name = await Input.BuildTextPrompt<string>("Enter the model name:")
+                                .WithDefault(model.Name)
                                 .AddValidation(name => ModelEntity.ValidateName(name, modelHandler))
                                 .ShowAsync(ct);
         model.ProviderKey = provider.Key;
         model.MaximumContextSize = await Input.BuildTextPrompt<uint>("Enter the maximum context size:")
+                                              .WithDefault(model.MaximumContextSize)
                                               .ShowAsync(ct);
         model.MaximumOutputTokens = await Input.BuildTextPrompt<uint>("Enter the maximum output tokens:")
+                                               .WithDefault(model.MaximumOutputTokens)
                                                .ShowAsync(ct);
         model.InputCostPerMillionTokens = await Input.BuildTextPrompt<decimal>("Enter the input cost per million tokens:")
+                                                     .WithDefault(model.InputCostPerMillionTokens)
                                                      .AddValidation(ModelEntity.ValidateInputCost)
                                                      .ShowAsync(ct);
         model.OutputCostPerMillionTokens = await Input.BuildTextPrompt<decimal>("Enter the output cost per million tokens:")
+                                                      .WithDefault(model.OutputCostPerMillionTokens)
                                                       .AddValidation(ModelEntity.ValidateOutputCost)
                                                       .ShowAsync(ct);
         model.TrainingDateCutOff = await Input.BuildTextPrompt<DateOnly?>("Enter the training data cut-off date (YYYY-MM-DD):")
+                                              .WithDefault(model.TrainingDateCutOff)
                                               .AddValidation(ModelEntity.ValidateDateCutOff)
                                               .ShowAsync(ct);
     }
