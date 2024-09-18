@@ -1,6 +1,4 @@
-﻿using Lola.Utilities;
-
-namespace Lola.Tasks.Commands;
+﻿namespace Lola.Tasks.Commands;
 
 public class TaskListCommand(IHasChildren parent, ITaskHandler taskHandler)
     : Command<TaskListCommand>(parent, "List", n => {

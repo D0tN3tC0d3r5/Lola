@@ -1,6 +1,4 @@
-﻿using Lola.Utilities.HttpConnection.Handlers;
-
-var app = LolaShellApplication.Create(args, cb => {
+﻿var app = LolaShellApplication.Create(args, cb => {
     cb.AddAppSettings(); // This will add the values from appsettings.json to the context
     cb.AddUserSecrets<Program>(); // This will add the values from the user secrets to the context
 }, ab => {

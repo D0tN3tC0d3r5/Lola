@@ -1,6 +1,4 @@
-﻿using Lola.Utilities;
-
-namespace Lola.Providers.Commands;
+﻿namespace Lola.Providers.Commands;
 
 public class ProviderRemoveCommand(IHasChildren parent, IProviderHandler handler, IModelHandler modelHandler)
     : Command<ProviderRemoveCommand>(parent, "Remove", n => {

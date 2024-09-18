@@ -44,6 +44,7 @@ global using Lola.Tasks.Repositories;
 global using Lola.UserProfile.Commands;
 global using Lola.UserProfile.Handlers;
 global using Lola.UserProfile.Repositories;
+global using Lola.Utilities;
 global using Lola.Utilities.HttpConnection.Handlers;
 
 global using Microsoft.Extensions.Configuration;

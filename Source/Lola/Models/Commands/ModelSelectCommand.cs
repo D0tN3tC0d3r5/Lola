@@ -1,6 +1,4 @@
-﻿using Lola.Utilities;
-
-namespace Lola.Models.Commands;
+﻿namespace Lola.Models.Commands;
 
 public class ModelSelectCommand(IHasChildren parent, IModelHandler handler)
     : Command<ModelSelectCommand>(parent, "Select", n => {

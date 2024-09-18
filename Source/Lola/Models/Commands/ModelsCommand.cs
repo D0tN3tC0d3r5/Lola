@@ -1,10 +1,8 @@
-﻿using Lola.Utilities;
-
-namespace Lola.Models.Commands;
+﻿namespace Lola.Models.Commands;
 
 public class ModelsCommand(IHasChildren parent)
     : Command<ModelsCommand>(parent, "Models", n => {
-        n.Description = "Manage models";
+        n.Description = "Manage AI Models";
         n.Help = "Register, update, or remove models from a specific LLM provider.";
         n.AddCommand<ModelListCommand>();
         n.AddCommand<ModelAddCommand>();

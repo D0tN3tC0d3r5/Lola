@@ -1,6 +1,4 @@
-﻿using Lola.Utilities;
-
-namespace Lola.Main.Commands;
+﻿namespace Lola.Main.Commands;
 
 public class HelpCommand(IHasChildren parent)
     : Command<HelpCommand>(parent, "Help", n => {

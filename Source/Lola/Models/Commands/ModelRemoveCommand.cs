@@ -1,6 +1,4 @@
-﻿using Lola.Utilities;
-
-namespace Lola.Models.Commands;
+﻿namespace Lola.Models.Commands;
 
 public class ModelRemoveCommand(IHasChildren parent, IModelHandler handler)
     : Command<ModelRemoveCommand>(parent, "Remove", n => {

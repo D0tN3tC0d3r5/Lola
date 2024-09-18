@@ -1,6 +1,4 @@
-﻿using Lola.Utilities;
-
-namespace Lola.Models.Commands;
+﻿namespace Lola.Models.Commands;
 
 public class ModelViewCommand(IHasChildren parent, IModelHandler handler, IProviderHandler providerHandler)
     : Command<ModelViewCommand>(parent, "Info", n => {

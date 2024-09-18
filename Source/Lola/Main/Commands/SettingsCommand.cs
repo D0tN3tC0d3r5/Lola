@@ -1,6 +1,4 @@
-﻿using Lola.Utilities;
-
-namespace Lola.Main.Commands;
+﻿namespace Lola.Main.Commands;
 
 public class SettingsCommand(IHasChildren parent, IOptions<LolaSettings> settings)
     : Command<SettingsCommand>(parent, "Settings", n => {

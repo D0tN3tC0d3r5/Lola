@@ -1,6 +1,4 @@
-﻿using Lola.Utilities;
-
-namespace Lola.UserProfile.Commands;
+﻿namespace Lola.UserProfile.Commands;
 
 public class UserProfileViewCommand(IHasChildren parent, IUserProfileHandler handler)
     : Command<UserProfileViewCommand>(parent, "Info", n => {

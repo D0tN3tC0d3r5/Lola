@@ -1,6 +1,4 @@
-﻿using Lola.Utilities;
-
-namespace Lola.Providers.Commands;
+﻿namespace Lola.Providers.Commands;
 
 public class ProviderViewCommand(IHasChildren parent, IProviderHandler handler)
     : Command<ProviderViewCommand>(parent, "Info", n => {

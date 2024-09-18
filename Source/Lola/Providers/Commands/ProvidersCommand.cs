@@ -1,6 +1,4 @@
-﻿using Lola.Utilities;
-
-namespace Lola.Providers.Commands;
+﻿namespace Lola.Providers.Commands;
 
 public class ProvidersCommand(IHasChildren parent)
     : Command<ProvidersCommand>(parent, "Providers", n => {

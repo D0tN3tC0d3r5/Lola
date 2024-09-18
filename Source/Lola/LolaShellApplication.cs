@@ -9,13 +9,13 @@ public class LolaShellApplication
         : base(args, services) {
         _userHandler = userHandler;
         _logger = logger;
-        AddCommand<HelpCommand>();
-        AddCommand<SettingsCommand>();
         AddCommand<ProvidersCommand>();
         AddCommand<ModelsCommand>();
-        if (_userHandler.Value.CurrentUser is not null) AddCommand<UserProfileCommand>();
         AddCommand<PersonasCommand>();
         AddCommand<TasksCommand>();
+        if (_userHandler.Value.CurrentUser is not null) AddCommand<UserProfileCommand>();
+        AddCommand<SettingsCommand>();
+        AddCommand<HelpCommand>();
     }
 
     protected override async Task<Result> OnStart(CancellationToken ct = default) {
@@ -47,17 +47,7 @@ public class LolaShellApplication
 
         return ProcessCommand(choice, ct);
 
-        static string MapTo(string choice) => choice switch {
-            "Providers" => "Manage Providers",
-            "Models" => "Manage Models",
-            "Personas" => "Manage Personas",
-            "Tasks" => "Manage Tasks",
-            "UserProfile" => "Manage User Profile",
-            "Settings" => "Settings",
-            "Help" => "Help",
-            "Exit" => "Exit",
-            _ => string.Empty,
-        };
+        string MapTo(string item) => Commands.FirstOrDefault(i => i.Name == item)?.Description ?? string.Empty;
     }
 
     protected override Task<Result> ProcessCommand(string[] input, CancellationToken ct) {

@@ -1,11 +1,9 @@
-﻿using Lola.Utilities;
-
-namespace Lola.Personas.Commands;
+﻿namespace Lola.Personas.Commands;
 
 public class PersonaListCommand(IHasChildren parent, IPersonaHandler personaHandler)
     : Command<PersonaListCommand>(parent, "List", n => {
         n.Aliases = ["ls"];
-        n.Description = "List personas.";
+        n.Description = "List personas";
         n.Help = "List all the agent's personas.";
     }) {
     protected override Result Execute() => this.HandleCommand(() => {

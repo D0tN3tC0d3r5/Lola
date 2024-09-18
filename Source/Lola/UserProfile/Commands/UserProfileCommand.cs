@@ -1,6 +1,4 @@
-﻿using Lola.Utilities;
-
-namespace Lola.UserProfile.Commands;
+﻿namespace Lola.UserProfile.Commands;
 
 public class UserProfileCommand(IHasChildren parent)
     : Command<UserProfileCommand>(parent, "UserProfile", n => {

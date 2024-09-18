@@ -1,10 +1,8 @@
-﻿using Lola.Utilities;
-
-namespace Lola.Tasks.Commands;
+﻿namespace Lola.Tasks.Commands;
 
 public class TasksCommand(IHasChildren parent)
     : Command<TasksCommand>(parent, "Tasks", n => {
-        n.Description = "Manage AI Tasks.";
+        n.Description = "Manage Tasks.";
         n.AddCommand<TaskListCommand>();
         //n.AddCommand<TaskCreateCommand>();
         //n.AddCommand<TaskUpdateCommand>();

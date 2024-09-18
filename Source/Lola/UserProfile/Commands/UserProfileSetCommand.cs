@@ -1,6 +1,4 @@
-﻿using Lola.Utilities;
-
-using Task = System.Threading.Tasks.Task;
+﻿using Task = System.Threading.Tasks.Task;
 using ValidationException = DotNetToolbox.Results.ValidationException;
 
 namespace Lola.UserProfile.Commands;

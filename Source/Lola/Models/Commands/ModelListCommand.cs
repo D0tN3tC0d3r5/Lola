@@ -1,6 +1,4 @@
-﻿using Lola.Utilities;
-
-namespace Lola.Models.Commands;
+﻿namespace Lola.Models.Commands;
 
 public class ModelListCommand(IHasChildren parent, IModelHandler modelHandler, IProviderHandler providerHandler)
     : Command<ModelListCommand>(parent, "List", n => {
