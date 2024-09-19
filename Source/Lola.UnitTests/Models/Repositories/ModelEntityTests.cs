@@ -39,9 +39,9 @@ public class ModelEntityTests {
     }
 
     [Theory]
-    [InlineData(null, "The identifier is required.")]
-    [InlineData("", "The identifier is required.")]
-    [InlineData(" ", "The identifier is required.")]
+    [InlineData(null, "The key is required.")]
+    [InlineData("", "The key is required.")]
+    [InlineData(" ", "The key is required.")]
     public void ValidateKey_WithInvalidKey_ShouldReturnError(string? key, string expectedError) {
         // Act
         var result = ModelEntity.ValidateKey(key, _mockModelHandler);
