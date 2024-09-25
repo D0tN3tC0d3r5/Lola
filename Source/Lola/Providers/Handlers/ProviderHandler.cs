@@ -13,7 +13,7 @@ public class ProviderHandler(IProviderDataSource dataSource, Lazy<IModelHandler>
         if (GetById(provider.Id) != null)
             throw new ValidationException($"A provider with the id '{provider.Id}' already exists.");
 
-        var context = Map.FromValue(nameof(ProviderHandler), this);
+        var context = Map.FromMap([new(nameof(ProviderHandler), this)]);
         var result = dataSource.Add(provider, context);
         if (!result.IsSuccess)
             throw new ValidationException(result.Errors);
@@ -24,7 +24,7 @@ public class ProviderHandler(IProviderDataSource dataSource, Lazy<IModelHandler>
         if (GetById(provider.Id) is null)
             throw new ValidationException($"Provider with id '{provider.Id}' not found.");
 
-        var context = Map.FromValue(nameof(ProviderHandler), this);
+        var context = Map.FromMap([new(nameof(ProviderHandler), this)]);
         var result = dataSource.Update(provider, context);
         if (!result.IsSuccess)
             throw new ValidationException(result.Errors);

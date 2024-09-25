@@ -15,7 +15,6 @@ global using Lola.Models.Repositories;
 global using Lola.Personas.Handlers;
 global using Lola.Providers.Handlers;
 global using Lola.Providers.Repositories;
-global using Lola.Tasks.Handlers;
 global using Lola.UserProfile.Handlers;
 
 global using Microsoft.Extensions.Configuration;

@@ -49,7 +49,7 @@ public class ModelHandler(IApplication application, IModelDataSource dataSource,
 
     public void Add(ModelEntity model) {
         if (_selected is null) model.Selected = true;
-        var context = Map.FromMap([new("EntityAction", "Add"), new(nameof(ModelHandler), this), new(nameof(ProviderHandler), providerHandler.Value)]);
+        var context = Map.FromMap([new(nameof(ModelHandler), this), new(nameof(ProviderHandler), providerHandler.Value)]);
         var result = dataSource.Add(model, context);
         if (!result.IsSuccess)
             throw new ValidationException(result.Errors);

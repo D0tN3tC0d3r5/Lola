@@ -31,35 +31,4 @@ public static class CommandHelpers {
                                    .ConvertWith(e => e.Item is null ? $"[yellow bold]{e.Text}[/]" : e.Text)
                                    .ShowAsync(ct)).Item;
     }
-
-    public static Result HandleCommand(this ICommand command, Func<Result> execute, string errorMessage) {
-        try {
-            var result = execute();
-            command.Output.WriteLine();
-            return result;
-        }
-        catch (Exception ex) {
-            return command.HandleException(ex, errorMessage);
-        }
-    }
-
-    public static async Task<Result> HandleCommandAsync(this ICommand command, Func<CancellationToken, Task<Result>> execute, string errorMessage, CancellationToken ct = default) {
-        try {
-            var result = await execute(ct);
-            command.Output.WriteLine();
-            return result;
-        }
-        catch (Exception ex) {
-            return command.HandleException(ex, errorMessage);
-        }
-    }
-
-    private static Result HandleException(this INode command, Exception ex, [StringSyntax("CompositeFormat")] string message, params object[] args) {
-#pragma warning disable CA2254
-        command.Logger.LogError(ex, message, args);
-#pragma warning restore CA2254
-        command.Output.WriteError(ex, string.Format(message, args));
-        command.Output.WriteLine();
-        return Result.Error(ex);
-    }
 }

@@ -6,7 +6,6 @@ public class UserProfileEntity
     : Entity<UserProfileEntity, uint> {
     public bool Internal { get; init; }
     public string Name { get; set; } = string.Empty;
-    public string Language { get; set; } = "English";
     public List<string> Facts { get; } = [];
 
     public override Result Validate(IMap? context = null) {
@@ -18,7 +17,6 @@ public class UserProfileEntity
     public static implicit operator AIUserProfile(UserProfileEntity entity)
         => new(entity.Id) {
             Name = entity.Name,
-            Language = entity.Language,
             Facts = entity.Facts,
         };
 

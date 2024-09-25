@@ -8,7 +8,7 @@ public class PersonaHandler(IServiceProvider services, ILogger<PersonaHandler> l
     private readonly IModelHandler _modelHandler = services.GetRequiredService<IModelHandler>();
     private readonly IUserProfileHandler _userHandler = services.GetRequiredService<IUserProfileHandler>();
     private readonly IPersonaDataSource _dataSource = services.GetRequiredService<IPersonaDataSource>();
-    private readonly ITaskHandler _taskHandler = services.GetRequiredService<ITaskHandler>();
+    private readonly IJobHandler _jobHandler = services.GetRequiredService<IJobHandler>();
     private readonly IAgentAccessor _connectionAccessor = services.GetRequiredService<IAgentAccessor>();
 
     public PersonaEntity[] List() => _dataSource.GetAll();
@@ -21,7 +21,7 @@ public class PersonaHandler(IServiceProvider services, ILogger<PersonaHandler> l
         if (_dataSource.FindByKey(persona.Id) != null)
             throw new InvalidOperationException($"A persona with the id '{persona.Id}' already exists.");
 
-        var context = Map.FromValue(nameof(PersonaHandler), this);
+        var context = Map.FromMap([new(nameof(PersonaHandler), this)]);
         var result = _dataSource.Add(persona, context);
         if (!result.IsSuccess)
             throw new ValidationException(result.Errors);
@@ -32,7 +32,7 @@ public class PersonaHandler(IServiceProvider services, ILogger<PersonaHandler> l
         if (_dataSource.FindByKey(persona.Id) == null)
             throw new InvalidOperationException($"Persona with id '{persona.Id}' not found.");
 
-        var context = Map.FromValue(nameof(PersonaHandler), this);
+        var context = Map.FromMap([new(nameof(PersonaHandler), this)]);
         var result = _dataSource.Update(persona, context);
         if (!result.IsSuccess)
             throw new ValidationException(result.Errors);
@@ -53,7 +53,7 @@ public class PersonaHandler(IServiceProvider services, ILogger<PersonaHandler> l
             var httpConnection = _connectionAccessor.GetFor(appModel.Provider!.Name);
             var userProfileEntity = _userHandler.CurrentUser ?? throw new InvalidOperationException("No user found.");
             var personaEntity = GetById(1) ?? throw new InvalidOperationException("Required persona not found. Name: 'Agent Creator'.");
-            var taskEntity = _taskHandler.GetById(1) ?? throw new InvalidOperationException("Required task not found. Name: 'Ask Questions about the AI Agent'.");
+            var taskEntity = _jobHandler.GetById(1) ?? throw new InvalidOperationException("Required task not found. Name: 'Ask Questions about the AI Agent'.");
             var context = new JobContext {
                 Model = appModel,
                 Agent = httpConnection,
@@ -95,7 +95,7 @@ public class PersonaHandler(IServiceProvider services, ILogger<PersonaHandler> l
             var httpConnection = _connectionAccessor.GetFor(appModel.Provider!.Name);
             var userProfileEntity = _userHandler.CurrentUser ?? throw new InvalidOperationException("No user found.");
             var personaEntity = GetById(1) ?? throw new InvalidOperationException("Required persona not found. Name: 'Agent Creator'.");
-            var taskEntity = _taskHandler.GetById(2) ?? throw new InvalidOperationException("Required task not found. Name: 'Ask Questions about the AI Agent'.");
+            var taskEntity = _jobHandler.GetById(2) ?? throw new InvalidOperationException("Required task not found. Name: 'Ask Questions about the AI Agent'.");
             var context = new JobContext {
                 Model = appModel,
                 Agent = httpConnection,

@@ -1,19 +1,20 @@
 ﻿namespace Lola.Main.Commands;
 
 public class HelpCommand(IHasChildren parent)
-    : Command<HelpCommand>(parent, "Help", n => {
+    : LolaCommand<HelpCommand>(parent, "Help", n => {
         n.Aliases = ["?"];
         n.Description = "Show help";
+        n.ErrorText = "displaying the help information";
         n.Help = "Display this help information.";
         n.AddParameter("Target", string.Empty);
     }) {
     private const int _indentSize = 4;
 
-    protected override Result Execute() => this.HandleCommand(() => {
+    protected override Result HandleCommand() {
         Logger.LogInformation("Executing Help command...");
         ShowHelp();
         return Result.Success();
-    }, "Error displaying the help information.");
+    }
 
     private void ShowHelp() {
         var target = Context.GetValueAs<string>("Target");

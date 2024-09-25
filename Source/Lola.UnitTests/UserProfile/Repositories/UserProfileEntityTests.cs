@@ -9,7 +9,6 @@ public class UserProfileEntityTests {
         var entity = new UserProfileEntity {
             Id = 1,
             Name = "Test User",
-            Language = "English",
         };
 
         // Act
@@ -28,7 +27,6 @@ public class UserProfileEntityTests {
         var entity = new UserProfileEntity {
             Id = 1,
             Name = name!,
-            Language = "English",
         };
 
         // Act
@@ -71,7 +69,6 @@ public class UserProfileEntityTests {
             Id = 1,
             Internal = true,
             Name = "Test User",
-            Language = "French",
         };
         entity.Facts.Add("Fact 1");
         entity.Facts.Add("Fact 2");
@@ -82,7 +79,6 @@ public class UserProfileEntityTests {
         // Assert
         profile.Id.Should().Be(entity.Id);
         profile.Name.Should().Be(entity.Name);
-        profile.Language.Should().Be(entity.Language);
         profile.Facts.Should().BeEquivalentTo(entity.Facts);
     }
 
@@ -94,14 +90,5 @@ public class UserProfileEntityTests {
         // Assert
         entity.Facts.Should().NotBeNull();
         entity.Facts.Should().BeEmpty();
-    }
-
-    [Fact]
-    public void Language_ShouldDefaultToEnglish() {
-        // Arrange & Act
-        var entity = new UserProfileEntity();
-
-        // Assert
-        entity.Language.Should().Be("English");
     }
 }

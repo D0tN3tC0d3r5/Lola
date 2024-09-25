@@ -1,18 +1,19 @@
 ﻿namespace Lola.Main.Commands;
 
 public class SettingsCommand(IHasChildren parent, IOptions<LolaSettings> settings)
-    : Command<SettingsCommand>(parent, "Settings", n => {
+    : LolaCommand<SettingsCommand>(parent, "Settings", n => {
         n.Aliases = ["set"];
         n.Description = "Show settings";
+        n.ErrorText = "displaying the settings";
         n.Help = "Display the current configuration of Lola.";
     }) {
     private readonly LolaSettings _settings = settings.Value;
 
-    protected override Result Execute() => this.HandleCommand(() => {
+    protected override Result HandleCommand() {
         Logger.LogInformation("Executing Settings command...");
         DrawTable();
         return Result.Success();
-    }, "Error displaying the settings.");
+    }
 
     private void DrawTable() {
         var table = new Table();

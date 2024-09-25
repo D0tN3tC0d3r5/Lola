@@ -9,11 +9,11 @@ public class LolaShellApplication
         : base(args, services) {
         _userHandler = userHandler;
         _logger = logger;
-        AddCommand<ProvidersCommand>();
-        AddCommand<ModelsCommand>();
-        AddCommand<PersonasCommand>();
-        AddCommand<TasksCommand>();
-        if (_userHandler.Value.CurrentUser is not null) AddCommand<UserProfileCommand>();
+        AddCommand<ProvidersMainMenu>();
+        AddCommand<ModelsMainMenu>();
+        AddCommand<PersonasMainMenu>();
+        AddCommand<JobsMainMenu>();
+        if (_userHandler.Value.CurrentUser is not null) AddCommand<UserProfileMainMenu>();
         AddCommand<SettingsCommand>();
         AddCommand<HelpCommand>();
     }
@@ -69,7 +69,7 @@ public class LolaShellApplication
     private Task<Result> RegisterUser(CancellationToken ct = default) {
         Output.WriteLine($"[bold]Welcome to {Name}, your AI assisted shell![/]");
         Output.WriteLine();
-        var command = new UserProfileSetCommand(this, _userHandler.Value);
+        var command = new UpdateUserProfile(this, _userHandler.Value);
         Output.WriteLine("[bold][Yellow]Hi![/] It seems that is the first time that I see you around here.[/]");
         return command.Execute([], ct);
     }

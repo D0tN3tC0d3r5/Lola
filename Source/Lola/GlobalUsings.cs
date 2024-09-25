@@ -1,7 +1,6 @@
 // Global using directives
 global using System.ComponentModel;
 global using System.ComponentModel.DataAnnotations;
-global using System.Diagnostics.CodeAnalysis;
 global using System.Linq.Expressions;
 global using System.Reflection;
 global using System.Runtime.CompilerServices;
@@ -28,6 +27,10 @@ global using DotNetToolbox.Environment;
 global using DotNetToolbox.Results;
 
 global using Lola;
+global using Lola.Commands;
+global using Lola.Jobs.Commands;
+global using Lola.Jobs.Handlers;
+global using Lola.Jobs.Repositories;
 global using Lola.Main.Commands;
 global using Lola.Models.Commands;
 global using Lola.Models.Handlers;
@@ -38,9 +41,6 @@ global using Lola.Personas.Repositories;
 global using Lola.Providers.Commands;
 global using Lola.Providers.Handlers;
 global using Lola.Providers.Repositories;
-global using Lola.Tasks.Commands;
-global using Lola.Tasks.Handlers;
-global using Lola.Tasks.Repositories;
 global using Lola.UserProfile.Commands;
 global using Lola.UserProfile.Handlers;
 global using Lola.UserProfile.Repositories;
