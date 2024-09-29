@@ -9,8 +9,8 @@ public class UserProfileMainMenu(IHasChildren parent)
     }) {
     protected override async Task<Result> HandleCommandAsync(CancellationToken ct = default) {
         Logger.LogInformation("Executing UserProfile command...");
-        var choice = await Input.BuildSelectionPrompt<string>("What would you like to do?")
-                                .ConvertWith(MapTo)
+        var choice = await Input.BuildSelectionPrompt("What would you like to do?")
+                                .DisplayAs(MapTo)
                                 .AddChoices(Commands.ToArray(c => c.Name))
                                 .ShowAsync(ct);
 

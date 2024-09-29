@@ -1,10 +1,10 @@
-﻿namespace Lola.Jobs.Commands;
+﻿namespace Lola.Goals.Commands;
 
-public class JobsMainMenu(IHasChildren parent)
-    : LolaCommand<JobsMainMenu>(parent, "Jobs", n => {
-        n.Description = "Manage Jobs";
-        n.ErrorText = "displaying the job's main menu";
-        n.AddCommand<ListJobs>();
+public class GoalsMainMenu(IHasChildren parent)
+    : LolaCommand<GoalsMainMenu>(parent, "Goals", n => {
+        n.Description = "Manage Goals";
+        n.ErrorText = "displaying the goal's main menu";
+        n.AddCommand<ListGoals>();
         //n.AddCommand<TaskCreateCommand>();
         //n.AddCommand<TaskUpdateCommand>();
         //n.AddCommand<TaskRemoveCommand>();
@@ -12,9 +12,9 @@ public class JobsMainMenu(IHasChildren parent)
         n.AddCommand<HelpCommand>();
     }) {
     protected override async Task<Result> HandleCommandAsync(CancellationToken ct = default) {
-        Logger.LogInformation("Executing Jobs command...");
-        var choice = await Input.BuildSelectionPrompt<string>("What would you like to do?")
-                                .ConvertWith(MapTo)
+        Logger.LogInformation("Executing Goals command...");
+        var choice = await Input.BuildSelectionPrompt("What would you like to do?")
+                                .DisplayAs(MapTo)
                                 .AddChoices(Commands.ToArray(c => c.Name))
                                 .ShowAsync(ct);
 
@@ -23,6 +23,6 @@ public class JobsMainMenu(IHasChildren parent)
             ? Result.Success()
             : await command.Execute([], ct);
 
-        string MapTo(string item) => Commands.FirstOrDefault(i => i.Name == item)?.Description ?? string.Empty;
+        string MapTo(string? item) => Commands.FirstOrDefault(i => i.Name == item)?.Description ?? string.Empty;
     }
 }

@@ -10,9 +10,12 @@ global using DotNetToolbox.TestUtilities.Logging;
 
 global using FluentAssertions;
 
+global using Lola.Common;
+global using Lola.Goals.Handlers;
 global using Lola.Models.Handlers;
 global using Lola.Models.Repositories;
 global using Lola.Personas.Handlers;
+global using Lola.Providers;
 global using Lola.Providers.Handlers;
 global using Lola.Providers.Repositories;
 global using Lola.UserProfile.Handlers;

@@ -13,7 +13,7 @@ public class RemoveProvider(IHasChildren parent, IProviderHandler handler, IMode
         if (!result.IsSuccess) return result;
         var provider = result.Value;
 
-        var models = modelHandler.List(provider.Id);
+        var models = modelHandler.List(m => m.ProviderId == provider.Id);
         if (models.Length > 0) {
             Output.WriteLine("[yellow bold]The following model(s) will also be deleted.[/]");
             ShowList(models);

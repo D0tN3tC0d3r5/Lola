@@ -50,11 +50,11 @@
     ab.Services.AddScoped(p => new Lazy<IPersonaDataSource>(p.GetRequiredService<IPersonaDataSource>));
     ab.Services.AddScoped(p => new Lazy<IPersonaHandler>(p.GetRequiredService<IPersonaHandler>));
 
-    ab.Services.AddSingleton<IJobStorage, JobStorage>();
-    ab.Services.AddScoped<IJobDataSource, JobDataSource>();
-    ab.Services.AddScoped<IJobHandler, JobHandler>();
-    ab.Services.AddScoped(p => new Lazy<IJobDataSource>(p.GetRequiredService<IJobDataSource>));
-    ab.Services.AddScoped(p => new Lazy<IJobHandler>(p.GetRequiredService<IJobHandler>));
+    ab.Services.AddSingleton<IGoalStorage, GoalStorage>();
+    ab.Services.AddScoped<IGoalDataSource, GoalDataSource>();
+    ab.Services.AddScoped<IGoalHandler, GoalHandler>();
+    ab.Services.AddScoped(p => new Lazy<IGoalDataSource>(p.GetRequiredService<IGoalDataSource>));
+    ab.Services.AddScoped(p => new Lazy<IGoalHandler>(p.GetRequiredService<IGoalHandler>));
 });
 
 try {

@@ -1,10 +1,10 @@
-﻿namespace Lola.Personas.Repositories;
+﻿namespace Lola.Personas;
 
 public class PersonaEntity
     : Entity<PersonaEntity, uint> {
     public string Name { get; set; } = string.Empty;
     public string Role { get; set; } = string.Empty;
-    public List<string> Goals { get; set; } = [];
+    public List<string> Objectives { get; set; } = [];
 
     public List<Query> Questions { get; init; } = [];
 
@@ -19,7 +19,7 @@ public class PersonaEntity
         var action = IsNotNull(context).GetRequiredValueAs<EntityAction>(nameof(EntityAction));
         result += ValidateName(action == EntityAction.Insert ? null : Id, Name, context.GetRequiredValueAs<IPersonaHandler>(nameof(PersonaHandler)));
         result += ValidateRole(Role);
-        result += ValidateGoals(Goals);
+        result += ValidateObjectives(Objectives);
         return result;
     }
 
@@ -27,7 +27,7 @@ public class PersonaEntity
         => new() {
             ["Name"] = entity.Name,
             ["Role"] = entity.Role,
-            ["Goals"] = entity.Goals,
+            ["Objectives"] = entity.Objectives,
             ["Questions"] = entity.Questions,
         };
 
@@ -35,7 +35,7 @@ public class PersonaEntity
         => new(entity.Id) {
             Name = entity.Name,
             Role = entity.Role,
-            Goals = entity.Goals,
+            Goals = entity.Objectives,
             Expertise = entity.Expertise,
             Characteristics = entity.Characteristics,
             Requirements = entity.Requirements,
@@ -59,18 +59,18 @@ public class PersonaEntity
         return result;
     }
 
-    public static Result ValidateGoal(string? goal) {
+    public static Result ValidateObjective(string? objective) {
         var result = Result.Success();
-        if (string.IsNullOrWhiteSpace(goal))
-            result += new ValidationError("The goal cannot be null or empty.", nameof(Goals));
+        if (string.IsNullOrWhiteSpace(objective))
+            result += new ValidationError("The objective cannot be null or empty.", nameof(Objectives));
         return result;
     }
 
-    public static Result ValidateGoals(List<string> goals) {
+    public static Result ValidateObjectives(List<string> objectives) {
         var result = Result.Success();
-        if (goals.Count == 0)
-            result += new ValidationError("At least one goal is required.", nameof(Goals));
-        return goals.Aggregate(result, (current, goal) => current + ValidateGoal(goal));
+        if (objectives.Count == 0)
+            result += new ValidationError("At least one objective is required.", nameof(Objectives));
+        return objectives.Aggregate(result, (current, objective) => current + ValidateObjective(objective));
     }
 
     public static Result ValidateCharacteristic(string? characteristic) {

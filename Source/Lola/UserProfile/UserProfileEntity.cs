@@ -1,6 +1,6 @@
 ﻿using AIUserProfile = DotNetToolbox.AI.Jobs.UserProfile;
 
-namespace Lola.UserProfile.Repositories;
+namespace Lola.UserProfile;
 
 public class UserProfileEntity
     : Entity<UserProfileEntity, uint> {

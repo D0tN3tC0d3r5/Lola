@@ -1,63 +1,63 @@
 ﻿using Task = System.Threading.Tasks.Task;
 
-namespace Lola.Jobs.Handlers;
+namespace Lola.Goals.Handlers;
 
-public class JobHandler(IServiceProvider services, ILogger<JobHandler> logger)
-    : IJobHandler {
+public class GoalHandler(IServiceProvider services, ILogger<GoalHandler> logger)
+    : IGoalHandler {
     private readonly IModelHandler _modelHandler = services.GetRequiredService<IModelHandler>();
     private readonly IUserProfileHandler _userHandler = services.GetRequiredService<IUserProfileHandler>();
-    private readonly IJobDataSource _dataSource = services.GetRequiredService<IJobDataSource>();
+    private readonly IGoalDataSource _dataSource = services.GetRequiredService<IGoalDataSource>();
     private readonly IPersonaHandler _personaHandler = services.GetRequiredService<IPersonaHandler>();
     private readonly IAgentAccessor _connectionAccessor = services.GetRequiredService<IAgentAccessor>();
 
-    public JobEntity[] List() => _dataSource.GetAll();
+    public GoalEntity[] List() => _dataSource.GetAll();
 
-    public JobEntity? GetById(uint id) => _dataSource.FindByKey(id);
-    public JobEntity? Find(Expression<Func<JobEntity, bool>> predicate) => _dataSource.Find(predicate);
+    public GoalEntity? GetById(uint id) => _dataSource.FindByKey(id);
+    public GoalEntity? Find(Expression<Func<GoalEntity, bool>> predicate) => _dataSource.Find(predicate);
 
-    public JobEntity Create(Action<JobEntity> setUp)
+    public GoalEntity Create(Action<GoalEntity> setUp)
         => _dataSource.Create(setUp);
 
-    public void Add(JobEntity job) {
-        if (_dataSource.FindByKey(job.Id) != null)
-            throw new InvalidOperationException($"A job with the id '{job.Id}' already exists.");
+    public void Add(GoalEntity goal) {
+        if (_dataSource.FindByKey(goal.Id) != null)
+            throw new InvalidOperationException($"A goal with the id '{goal.Id}' already exists.");
 
-        var context = Map.FromMap([new(nameof(JobHandler), this)]);
-        _dataSource.Add(job, context);
-        logger.LogInformation("Added new job: {TaskId} => {TaskName}", job.Name, job.Id);
+        var context = Map.FromMap([new(nameof(GoalHandler), this)]);
+        _dataSource.Add(goal, context);
+        logger.LogInformation("Added new goal: {TaskId} => {TaskName}", goal.Name, goal.Id);
     }
 
-    public void Update(JobEntity job) {
-        if (_dataSource.FindByKey(job.Id) == null)
-            throw new InvalidOperationException($"Job with id '{job.Id}' not found.");
+    public void Update(GoalEntity goal) {
+        if (_dataSource.FindByKey(goal.Id) == null)
+            throw new InvalidOperationException($"Goal with id '{goal.Id}' not found.");
 
-        var context = Map.FromMap([new(nameof(JobHandler), this)]);
-        _dataSource.Update(job, context);
-        logger.LogInformation("Updated job: {TaskId} => {TaskName}", job.Name, job.Id);
+        var context = Map.FromMap([new(nameof(GoalHandler), this)]);
+        _dataSource.Update(goal, context);
+        logger.LogInformation("Updated goal: {TaskId} => {TaskName}", goal.Name, goal.Id);
     }
 
     public void Remove(uint id) {
         var task = _dataSource.FindByKey(id)
-                     ?? throw new InvalidOperationException($"Job with id '{id}' not found.");
+                     ?? throw new InvalidOperationException($"Goal with id '{id}' not found.");
 
         _dataSource.Remove(id);
         logger.LogInformation("Removed task: {TaskId} => {TaskName}", task.Name, task.Id);
     }
 
-    public async Task<Query[]> GenerateQuestion(JobEntity job) {
+    public async Task<Query[]> GenerateQuestion(GoalEntity goal) {
         try {
             var appModel = _modelHandler.Selected ?? throw new InvalidOperationException("No default AI model selected.");
             var httpConnection = _connectionAccessor.GetFor(appModel.Provider!.Name);
             var userProfileEntity = _userHandler.CurrentUser ?? throw new InvalidOperationException("No user found.");
             var personaEntity = _personaHandler.GetById(1) ?? throw new InvalidOperationException("Required persona not found. Name: 'Task Creator'.");
-            var jobEntity = GetById(1) ?? throw new InvalidOperationException("Required job not found. Name: 'Ask Questions about the AI Task'.");
+            var goalEntity = GetById(1) ?? throw new InvalidOperationException("Required goal not found. Name: 'Ask Questions about the AI Task'.");
             var context = new JobContext {
                 Model = appModel,
                 Agent = httpConnection,
                 UserProfile = userProfileEntity,
                 Persona = personaEntity,
-                Task = jobEntity,
-                Input = job,
+                Task = goalEntity,
+                Input = goal,
             };
             var task = new Job(context);
             task.Converters.Add(typeof(List<Query>),
@@ -81,28 +81,28 @@ public class JobHandler(IServiceProvider services, ILogger<JobHandler> logger)
             });
         }
         catch (Exception ex) {
-            logger.LogError(ex, "Error generating next question for job {JobName}", job.Name);
+            logger.LogError(ex, "Error generating next question for goal {GoalName}", goal.Name);
             throw;
         }
     }
 
-    public async Task UpdateCreatedJob(JobEntity job) {
+    public async Task UpdateCreatedGoal(GoalEntity goal) {
         try {
             var appModel = _modelHandler.Selected ?? throw new InvalidOperationException("No default AI model selected.");
             var httpConnection = _connectionAccessor.GetFor(appModel.Provider!.Name);
             var userProfileEntity = _userHandler.CurrentUser ?? throw new InvalidOperationException("No user found.");
-            var personaEntity = _personaHandler.GetById(1) ?? throw new InvalidOperationException("Required job not found. Name: 'Agent Creator'.");
-            var jobEntity = GetById(2) ?? throw new InvalidOperationException("Required task not found. Name: 'Ask Questions about the AI Agent'.");
+            var personaEntity = _personaHandler.GetById(1) ?? throw new InvalidOperationException("Required goal not found. Name: 'Agent Creator'.");
+            var goalEntity = GetById(2) ?? throw new InvalidOperationException("Required task not found. Name: 'Ask Questions about the AI Agent'.");
             var context = new JobContext {
                 Model = appModel,
                 Agent = httpConnection,
                 UserProfile = userProfileEntity,
                 Persona = personaEntity,
-                Task = jobEntity,
-                Input = job,
+                Task = goalEntity,
+                Input = goal,
             };
-            var task = new Job(context);
-            task.Converters.Add(typeof(List<Query>),
+            var job = new Job(context);
+            job.Converters.Add(typeof(List<Query>),
                                 v => {
                                     var list = (List<Query>)v;
                                     if (list.Count == 0) return string.Empty;
@@ -114,12 +114,12 @@ public class JobHandler(IServiceProvider services, ILogger<JobHandler> logger)
                                     }
                                     return sb.ToString();
                                 });
-            var result = await task.Execute(CancellationToken.None);
+            var result = await job.Execute(CancellationToken.None);
             if (result.HasException) throw new("Failed to generate next question: " + result.Exception.Message);
-            job.Goals = context.OutputAsMap.GetRequiredList<string>(nameof(JobEntity.Goals));
+            goal.Objectives = context.OutputAsMap.GetRequiredList<string>(nameof(GoalEntity.Objectives));
         }
         catch (Exception ex) {
-            logger.LogError(ex, "Error generating next question for job {JobName}", job.Name);
+            logger.LogError(ex, "Error generating next question for goal {GoalName}", goal.Name);
             throw;
         }
     }

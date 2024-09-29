@@ -1,11 +1,11 @@
 ﻿using Task = DotNetToolbox.AI.Jobs.Task;
 
-namespace Lola.Jobs.Repositories;
+namespace Lola.Goals;
 
-public class JobEntity
-    : Entity<JobEntity, uint> {
+public class GoalEntity
+    : Entity<GoalEntity, uint> {
     public string Name { get; set; } = string.Empty;
-    public List<string> Goals { get; set; } = [];
+    public List<string> Objectives { get; set; } = [];
 
     public List<Query> Questions { get; init; } = [];
 
@@ -24,38 +24,38 @@ public class JobEntity
     public override Result Validate(IMap? context = null) {
         var result = base.Validate(context);
         var action = IsNotNull(context).GetRequiredValueAs<EntityAction>(nameof(EntityAction));
-        result += ValidateName(action == EntityAction.Insert ? null : Id, Name, context.GetRequiredValueAs<IJobHandler>(nameof(JobHandler)));
-        result += ValidateGoals(Goals);
+        result += ValidateName(action == EntityAction.Insert ? null : Id, Name, context.GetRequiredValueAs<IGoalHandler>(nameof(GoalHandler)));
+        result += ValidateObjectives(Objectives);
         return result;
     }
 
-    public static Result ValidateName(uint? id, string? name, IJobHandler handler) {
+    public static Result ValidateName(uint? id, string? name, IGoalHandler handler) {
         var result = Result.Success();
         if (string.IsNullOrWhiteSpace(name))
             result += new ValidationError("The name is required.", nameof(Name));
         else if (handler.Find(p => p.Name.Equals(name, StringComparison.OrdinalIgnoreCase) && (id == null || p.Id != id)) is not null)
-            result += new ValidationError("A job with this name is already registered.", nameof(Name));
+            result += new ValidationError("A goal with this name is already registered.", nameof(Name));
         return result;
     }
 
-    public static Result ValidateGoal(string? goal) {
+    public static Result ValidateObjective(string? objective) {
         var result = Result.Success();
-        if (string.IsNullOrWhiteSpace(goal))
-            result += new ValidationError("The goal cannot be null or empty.", nameof(Goals));
+        if (string.IsNullOrWhiteSpace(objective))
+            result += new ValidationError("The objective cannot be null or empty.", nameof(Objectives));
         return result;
     }
 
-    public static Result ValidateGoals(List<string> goals) {
+    public static Result ValidateObjectives(List<string> objectives) {
         var result = Result.Success();
-        if (goals.Count == 0)
-            result += new ValidationError("At least one goal is required.", nameof(Goals));
-        return goals.Aggregate(result, (current, goal) => current + ValidateGoal(goal));
+        if (objectives.Count == 0)
+            result += new ValidationError("At least one objective is required.", nameof(Objectives));
+        return objectives.Aggregate(result, (current, objective) => current + ValidateObjective(objective));
     }
 
-    public static implicit operator Task(JobEntity entity)
+    public static implicit operator Task(GoalEntity entity)
         => new(entity.Id) {
             Name = entity.Name,
-            Goals = entity.Goals,
+            Goals = entity.Objectives,
             Scope = entity.Scope,
             Requirements = entity.Requirements,
             Assumptions = entity.Assumptions,

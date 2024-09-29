@@ -5,10 +5,9 @@ public class ModelDataSourceTests {
     public void Constructor_ShouldInitializeCorrectly() {
         // Arrange
         var mockStorage = Substitute.For<IModelStorage>();
-        var mockProviders = new Lazy<IProviderDataSource>(() => Substitute.For<IProviderDataSource>());
 
         // Act
-        var subject = new ModelDataSource(mockStorage, mockProviders);
+        var subject = new ModelDataSource(mockStorage);
 
         // Assert
         subject.Should().BeAssignableTo<IModelDataSource>();
@@ -19,8 +18,7 @@ public class ModelDataSourceTests {
     public void GetAll_WithoutIncludingProviders_ShouldReturnModelsWithoutProviders() {
         // Arrange
         var mockStorage = Substitute.For<IModelStorage>();
-        var mockProviders = new Lazy<IProviderDataSource>(() => Substitute.For<IProviderDataSource>());
-        var subject = new ModelDataSource(mockStorage, mockProviders);
+        var subject = new ModelDataSource(mockStorage);
 
         var models = new[]
         {
@@ -31,7 +29,7 @@ public class ModelDataSourceTests {
         mockStorage.GetAll(Arg.Any<Expression<Func<ModelEntity, bool>>?>()).Returns(models);
 
         // Act
-        var result = subject.GetAll(includeProviders: false);
+        var result = subject.GetAll();
 
         // Assert
         result.Should().BeEquivalentTo(models);
@@ -43,8 +41,7 @@ public class ModelDataSourceTests {
         // Arrange
         var mockStorage = Substitute.For<IModelStorage>();
         var mockProviderDataSource = Substitute.For<IProviderDataSource>();
-        var mockProviders = new Lazy<IProviderDataSource>(() => mockProviderDataSource);
-        var subject = new ModelDataSource(mockStorage, mockProviders);
+        var subject = new ModelDataSource(mockStorage);
 
         var models = new[]
         {
@@ -62,7 +59,7 @@ public class ModelDataSourceTests {
         mockProviderDataSource.GetAll().Returns(providers);
 
         // Act
-        var result = subject.GetAll(includeProviders: true);
+        var result = subject.GetAll();
 
         // Assert
         result.Should().HaveCount(2);
@@ -75,8 +72,7 @@ public class ModelDataSourceTests {
         // Arrange
         var mockStorage = Substitute.For<IModelStorage>();
         var mockProviderDataSource = Substitute.For<IProviderDataSource>();
-        var mockProviders = new Lazy<IProviderDataSource>(() => mockProviderDataSource);
-        var subject = new ModelDataSource(mockStorage, mockProviders);
+        var subject = new ModelDataSource(mockStorage);
 
         var selectedModel = new ModelEntity { Id = 1, Key = "selected", ProviderId = 1, Selected = true };
         var provider = new ProviderEntity { Id = 1, Name = "Provider1" };
@@ -85,7 +81,7 @@ public class ModelDataSourceTests {
         mockProviderDataSource.FindByKey(1u).Returns(provider);
 
         // Act
-        var result = subject.GetSelected();
+        var result = subject.Find(p => p.Selected);
 
         // Assert
         result.Should().BeEquivalentTo(selectedModel);
@@ -96,14 +92,12 @@ public class ModelDataSourceTests {
     public void GetSelected_WithInvalidKey_ReturnsNull() {
         // Arrange
         var mockStorage = Substitute.For<IModelStorage>();
-        var mockProviderDataSource = Substitute.For<IProviderDataSource>();
-        var mockProviders = new Lazy<IProviderDataSource>(() => mockProviderDataSource);
-        var subject = new ModelDataSource(mockStorage, mockProviders);
+        var subject = new ModelDataSource(mockStorage);
 
         mockStorage.Find(Arg.Any<Expression<Func<ModelEntity, bool>>>()).Returns((ModelEntity?)null);
 
         // Act
-        var result = subject.GetSelected();
+        var result = subject.Find(p => p.Selected);
 
         // Assert
         result.Should().BeNull();
@@ -114,8 +108,7 @@ public class ModelDataSourceTests {
         // Arrange
         var mockStorage = Substitute.For<IModelStorage>();
         var mockProviderDataSource = Substitute.For<IProviderDataSource>();
-        var mockProviders = new Lazy<IProviderDataSource>(() => mockProviderDataSource);
-        var subject = new ModelDataSource(mockStorage, mockProviders);
+        var subject = new ModelDataSource(mockStorage);
 
         var model = new ModelEntity { Id = 1, Key = "model1", ProviderId = 1 };
         var provider = new ProviderEntity { Id = 1, Name = "Provider1" };
@@ -124,7 +117,7 @@ public class ModelDataSourceTests {
         mockProviderDataSource.FindByKey(1u).Returns(provider);
 
         // Act
-        var result = subject.FindById(1, includeProvider: true);
+        var result = subject.Find(p => p.Id == 1);
 
         // Assert
         result.Should().BeEquivalentTo(model);
@@ -135,15 +128,14 @@ public class ModelDataSourceTests {
     public void FindByKey_WithoutIncludeProvider_ShouldReturnModelWithoutProvider() {
         // Arrange
         var mockStorage = Substitute.For<IModelStorage>();
-        var mockProviders = new Lazy<IProviderDataSource>(() => Substitute.For<IProviderDataSource>());
-        var subject = new ModelDataSource(mockStorage, mockProviders);
+        var subject = new ModelDataSource(mockStorage);
 
         var model = new ModelEntity { Id = 1, Key = "model1", ProviderId = 1 };
 
         mockStorage.FindByKey(1).Returns(model);
 
         // Act
-        var result = subject.FindById(1, includeProvider: false);
+        var result = subject.Find(p => p.Id == 1);
 
         // Assert
         result.Should().BeEquivalentTo(model);
@@ -155,8 +147,7 @@ public class ModelDataSourceTests {
         // Arrange
         var mockStorage = Substitute.For<IModelStorage>();
         var mockProviderDataSource = Substitute.For<IProviderDataSource>();
-        var mockProviders = new Lazy<IProviderDataSource>(() => mockProviderDataSource);
-        var subject = new ModelDataSource(mockStorage, mockProviders);
+        var subject = new ModelDataSource(mockStorage);
 
         mockStorage.Find(Arg.Any<Expression<Func<ModelEntity, bool>>>()).Returns((ModelEntity?)null);
 

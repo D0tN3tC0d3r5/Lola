@@ -28,7 +28,7 @@ public class AddProvider(IHasChildren parent, IProviderHandler handler)
         if (await Input.ConfirmAsync("Do you have an API Key for this provider?", ct)) {
             provider.ApiKey = await Input.BuildMultilinePrompt("API Key:")
                                          .AsSingleLine()
-                                         .AddValidation(ProviderEntity.ValidateApiKey)
+                                         .AddValidation(n => ProviderEntity.ValidateApiKey(null, n, handler))
                                          .ShowAsync(ct);
 
             if (!string.IsNullOrWhiteSpace(provider.ApiKey))

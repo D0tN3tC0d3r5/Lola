@@ -41,7 +41,7 @@ public class UpdateProvider(IHasChildren parent, IProviderHandler handler)
             if (await Input.ConfirmAsync("Do you have an API Key for this provider?", ct)) {
                 provider.ApiKey = await Input.BuildMultilinePrompt("API Key:")
                                              .AsSingleLine()
-                                             .AddValidation(ProviderEntity.ValidateApiKey)
+                                             .AddValidation(apiKey => ProviderEntity.ValidateApiKey(provider.Id, apiKey, handler))
                                              .ShowAsync(ct);
             }
             provider.IsEnabled = false;

@@ -24,8 +24,8 @@ public class PersonaStorageTests {
             [nameof(PersonaHandler)] = personaHandler,
         };
         var subject = new PersonaStorage(mockConfiguration);
-        var entity1 = new PersonaEntity { Name = "Alpha", Role = "Boss", Goals = ["Some goal."] };
-        var entity2 = new PersonaEntity { Name = "Bravo", Role = "Assistant", Goals = ["Some goal."] };
+        var entity1 = new PersonaEntity { Name = "Alpha", Role = "Boss", Objectives = ["Some objective."] };
+        var entity2 = new PersonaEntity { Name = "Bravo", Role = "Assistant", Objectives = ["Some objective."] };
 
         // Act
         subject.Add(entity1, context);
@@ -46,8 +46,8 @@ public class PersonaStorageTests {
             [nameof(PersonaHandler)] = personaHandler,
         };
         var subject = new PersonaStorage(mockConfiguration);
-        var entity1 = new PersonaEntity { Name = "Alpha", Role = "Boss", Goals = ["Some goal."] };
-        var entity2 = new PersonaEntity { Name = "Bravo", Role = "Assistant", Goals = ["Some goal."] };
+        var entity1 = new PersonaEntity { Name = "Alpha", Role = "Boss", Objectives = ["Some objective."] };
+        var entity2 = new PersonaEntity { Name = "Bravo", Role = "Assistant", Objectives = ["Some objective."] };
 
         // Act
         subject.Add(entity1, context);

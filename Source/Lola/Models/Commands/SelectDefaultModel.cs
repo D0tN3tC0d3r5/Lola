@@ -15,12 +15,12 @@ public class SelectDefaultModel(IHasChildren parent, IModelHandler handler)
             return Result.Success();
         }
 
-        var selected = await Input.BuildSelectionPrompt<ModelEntity>("Select an model:")
+        var selected = await Input.BuildSelectionPrompt<ModelEntity>("Select an model:", m => m.Id)
                                   .AddChoices(models.OrderBy(m => m.ProviderId).ThenBy(m => m.Name))
-                                  .ConvertWith(c => c.Name)
+                                  .DisplayAs(c => c.Name)
                                   .ShowAsync(ct);
 
-        handler.Select(selected.Id);
+        handler.Select(selected!.Id);
         Output.WriteLine($"[green]Settings '{selected.Key}' selected successfully.[/]");
         return Result.Success();
     }

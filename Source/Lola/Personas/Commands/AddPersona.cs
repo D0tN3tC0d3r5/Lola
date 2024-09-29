@@ -38,8 +38,8 @@ public class AddPersona(IHasChildren parent, IPersonaHandler personaHandler)
         Output.WriteLine();
         Output.WriteLine($"[teal]Name:[/] {persona.Name}");
         Output.WriteLine($"[teal]Role:[/] {persona.Role}");
-        Output.WriteLine("[teal]Goals:[/]");
-        Output.WriteLine(string.Join("\n", persona.Goals.Select(i => $" - {i}")));
+        Output.WriteLine("[teal]Objectives:[/]");
+        Output.WriteLine(string.Join("\n", persona.Objectives.Select(i => $" - {i}")));
         Output.WriteLine("[teal]Expertise:[/] [green](auto-generated)[/]");
         Output.WriteLine(persona.Expertise);
         Output.WriteLine("[teal]Characteristics:[/] [green](auto-generated)[/]");
@@ -88,17 +88,17 @@ public class AddPersona(IHasChildren parent, IPersonaHandler personaHandler)
                                   .AddValidation(PersonaEntity.ValidateRole)
                                   .ShowAsync(ct);
 
-        var goal = await Input.BuildMultilinePrompt($"What is the Main Goal for the [white]{persona.Name}[/]?")
-                              .AddValidation(PersonaEntity.ValidateGoal)
+        var objective = await Input.BuildMultilinePrompt($"What is the Main Objective for the [white]{persona.Name}[/]?")
+                              .AddValidation(PersonaEntity.ValidateObjective)
                               .ShowAsync(ct);
-        persona.Goals.AddRange(goal.Replace("\r", "").Split("\n"));
-        var addAnotherGoal = await Input.ConfirmAsync("Would you like to add another goal?", ct);
-        while (addAnotherGoal) {
-            goal = await Input.BuildMultilinePrompt("Additional goal: ")
-                              .AddValidation(PersonaEntity.ValidateGoal)
+        persona.Objectives.AddRange(objective.Replace("\r", "").Split("\n"));
+        var addAnotherObjective = await Input.ConfirmAsync("Would you like to add another objective?", ct);
+        while (addAnotherObjective) {
+            objective = await Input.BuildMultilinePrompt("Additional objective: ")
+                              .AddValidation(PersonaEntity.ValidateObjective)
                               .ShowAsync(ct);
-            persona.Goals.AddRange(goal.Replace("\r", "").Split("\n"));
-            addAnotherGoal = await Input.ConfirmAsync("Would you like to add another goal?", ct);
+            persona.Objectives.AddRange(objective.Replace("\r", "").Split("\n"));
+            addAnotherObjective = await Input.ConfirmAsync("Would you like to add another objective?", ct);
         }
     }
 }

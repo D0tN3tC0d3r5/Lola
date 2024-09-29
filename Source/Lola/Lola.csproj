@@ -17,19 +17,9 @@
     <Deterministic>false</Deterministic>
     <NoWarn>$(NoWarn);DV2001;DV2002;CS7035</NoWarn>
     <UserSecretsId>0453e4b5-0554-42b5-a904-36f2e1ea3686</UserSecretsId>
-    <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>Lola.snk</AssemblyOriginatorKeyFile>
     <ApplicationIcon>lola.ico</ApplicationIcon>
     <ErrorReport>none</ErrorReport>
     <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DebugType>full</DebugType>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DebugType>full</DebugType>
   </PropertyGroup>
 
   <ItemGroup>
@@ -65,22 +55,16 @@
     <None Update="data\providers.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="data\users.json">
+    <None Update="data\profile.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="data\tasks.json">
+    <None Update="data\goals.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="saved\" />
+    <Folder Include="Jobs\Repositories\" />
   </ItemGroup>
-
-  <ProjectExtensions>
-    <VisualStudio>
-      <UserProperties data_4tasks_1json__JsonSchema="" />
-    </VisualStudio>
-  </ProjectExtensions>
 
 </Project>

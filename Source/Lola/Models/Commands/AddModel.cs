@@ -18,12 +18,12 @@ public class AddModel(IHasChildren parent, IModelHandler modelHandler, IProvider
             return Result.Invalid("No providers available.");
         }
 
-        var provider = await Input.BuildSelectionPrompt<ProviderEntity>("Select a provider:")
-                                  .ConvertWith(p => $"{p.Id}: {p.Name}")
+        var provider = await Input.BuildSelectionPrompt<ProviderEntity>("Select a provider:", p => p.Id)
+                                  .DisplayAs(p => $"{p.Id}: {p.Name}")
                                   .AddChoices(providers)
                                   .ShowAsync(ct);
         var model = new ModelEntity();
-        await SetUpAsync(model, provider, ct);
+        await SetUpAsync(model, provider!, ct);
 
         modelHandler.Add(model);
         Output.WriteLine($"[green]Settings '{model.Name}' added successfully.[/]");

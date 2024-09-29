@@ -28,25 +28,25 @@ public class ViewPersona(IHasChildren parent, IPersonaHandler handler)
     private void ShowDetails(PersonaEntity persona) {
         Output.WriteLine($"{persona.Name} [yellow]Information:[/]");
         Output.WriteLine();
-        Output.WriteLine($"[blue]{nameof(Persona.Role)}:[/]");
+        Output.WriteLine($"[blue]{nameof(PersonaEntity.Role)}:[/]");
         Output.WriteLine(persona.Role);
         Output.WriteLine();
-        Output.WriteLine($"[blue]{nameof(Persona.Expertise)}:[/]");
+        Output.WriteLine($"[blue]{nameof(PersonaEntity.Expertise)}:[/]");
         Output.WriteLine(persona.Expertise);
         Output.WriteLine();
-        Output.WriteLine($"[blue]{nameof(Persona.Goals)}:[/]");
-        foreach (var goal in persona.Goals) Output.WriteLine($" - {goal}");
+        Output.WriteLine($"[blue]{nameof(PersonaEntity.Objectives)}:[/]");
+        foreach (var objective in persona.Objectives) Output.WriteLine($" - {objective}");
         Output.WriteLine();
-        Output.WriteLine($"[blue]{nameof(Persona.Characteristics)}:[/]");
+        Output.WriteLine($"[blue]{nameof(PersonaEntity.Characteristics)}:[/]");
         foreach (var characteristic in persona.Characteristics) Output.WriteLine($" - {characteristic}");
         Output.WriteLine();
-        Output.WriteLine($"[blue]{nameof(Persona.Requirements)}:[/]");
+        Output.WriteLine($"[blue]{nameof(PersonaEntity.Requirements)}:[/]");
         foreach (var requirement in persona.Requirements) Output.WriteLine($" - {requirement}");
         Output.WriteLine();
-        Output.WriteLine($"[blue]{nameof(Persona.Restrictions)}:[/]");
+        Output.WriteLine($"[blue]{nameof(PersonaEntity.Restrictions)}:[/]");
         foreach (var restriction in persona.Restrictions) Output.WriteLine($" - {restriction}");
         Output.WriteLine();
-        Output.WriteLine($"[blue]{nameof(Persona.Traits)}:[/]");
+        Output.WriteLine($"[blue]{nameof(PersonaEntity.Traits)}:[/]");
         foreach (var trait in persona.Traits) Output.WriteLine($" - {trait}");
         Output.WriteLine();
     }

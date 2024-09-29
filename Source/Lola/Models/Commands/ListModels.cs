@@ -15,16 +15,14 @@ public class ListModels(IHasChildren parent, IModelHandler modelHandler, IProvid
             Logger.LogInformation("No providers available. List models action cancelled.");
             return Result.Invalid("No providers available.");
         }
-        var choices = providers.ToList(p => new ListItem<ProviderEntity, uint>(p.Id, p.Name, p));
-        var cancelOption = new ListItem<ProviderEntity, uint>(0, "All", null);
-        choices.Insert(0, cancelOption);
-        var selectedChoice = await Input.BuildSelectionPrompt<ListItem<ProviderEntity, uint>>("Select a provider:")
-                                    .ConvertWith(p => p.Text)
-                                    .AddChoices([.. choices])
+        var selectedChoice = await Input.BuildSelectionPrompt<ProviderEntity>("Select a provider:", p => p.Id)
+                                    .DisplayAs(p => p.Name)
+                                    .AddChoice(0, "Display all models", ChoicePosition.AtStart)
+                                    .AddChoices(providers)
                                     .ShowAsync(ct);
-        var models = selectedChoice.Key == default
+        var models = selectedChoice is null
             ? modelHandler.List()
-            : modelHandler.List(selectedChoice.Item!.Id);
+            : modelHandler.List(m => m.Id == selectedChoice.Id);
         if (models.Length == 0) {
             Output.WriteLine("[yellow]No models found.[/]");
             return Result.Success();
@@ -46,10 +44,10 @@ public class ListModels(IHasChildren parent, IModelHandler modelHandler, IProvid
         table.AddColumn(new TableColumn("[yellow]Map Size[/]").RightAligned());
         table.AddColumn(new TableColumn("[yellow]Output Tokens[/]").RightAligned());
         foreach (var model in sortedModels) {
-            var provider = providerHandler.GetById(model.ProviderId)!;
+            var provider = providerHandler.Find(p => p.Id == model.ProviderId);
             table.AddRow(
                 model.Name,
-                provider.Name,
+                provider?.Name ?? "Undefined",
                 model.Key,
                 $"{model.MaximumContextSize:#,##0}",
                 $"{model.MaximumOutputTokens:#,##0}"

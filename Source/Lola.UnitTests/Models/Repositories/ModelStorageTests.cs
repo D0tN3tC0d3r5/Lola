@@ -20,7 +20,7 @@ public class ModelStorageTests {
         var mockConfiguration = Substitute.For<IConfiguration>();
         var modelHandler = Substitute.For<IModelHandler>();
         var providerHandler = Substitute.For<IProviderHandler>();
-        providerHandler.GetById(Arg.Any<uint>()).Returns(new ProviderEntity());
+        providerHandler.Find(Arg.Any<Expression<Func<ProviderEntity, bool>>>()).Returns(new ProviderEntity());
         var context = new Map {
             [nameof(EntityAction)] = EntityAction.Insert,
             [nameof(ModelHandler)] = modelHandler,
@@ -45,7 +45,7 @@ public class ModelStorageTests {
         var mockConfiguration = Substitute.For<IConfiguration>();
         var modelHandler = Substitute.For<IModelHandler>();
         var providerHandler = Substitute.For<IProviderHandler>();
-        providerHandler.GetById(Arg.Any<uint>()).Returns(new ProviderEntity());
+        providerHandler.Find(Arg.Any<Expression<Func<ProviderEntity, bool>>>()).Returns(new ProviderEntity());
         var context = new Map {
             [nameof(EntityAction)] = EntityAction.Insert,
             [nameof(ModelHandler)] = modelHandler,

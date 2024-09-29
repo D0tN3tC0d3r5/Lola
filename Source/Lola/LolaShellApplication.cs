@@ -12,7 +12,7 @@ public class LolaShellApplication
         AddCommand<ProvidersMainMenu>();
         AddCommand<ModelsMainMenu>();
         AddCommand<PersonasMainMenu>();
-        AddCommand<JobsMainMenu>();
+        AddCommand<GoalsMainMenu>();
         if (_userHandler.Value.CurrentUser is not null) AddCommand<UserProfileMainMenu>();
         AddCommand<SettingsCommand>();
         AddCommand<HelpCommand>();
@@ -34,18 +34,18 @@ public class LolaShellApplication
 
     protected override Task<Result> ProcessInteraction(CancellationToken ct = default) {
         _logger.LogInformation("Executing default command...");
-        var choice = Input.BuildSelectionPrompt<string>("What would you like to do?")
-                          .ConvertWith(MapTo)
-                          .AddChoices("Providers",
+        var choice = Input.BuildSelectionPrompt("What would you like to do?")
+                          .DisplayAs(MapTo)
+                          .AddChoices(["Providers",
                                       "Models",
                                       "Personas",
                                       "Tasks",
                                       "UserProfile",
                                       "Settings",
                                       "Help",
-                                      "Exit").Show();
+                                      "Exit"]).Show();
 
-        return ProcessCommand(choice, ct);
+        return ProcessCommand(choice!, ct);
 
         string MapTo(string item) => Commands.FirstOrDefault(i => i.Name == item)?.Description ?? string.Empty;
     }

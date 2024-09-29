@@ -30,9 +30,9 @@ public class ListPersonas(IHasChildren parent, IPersonaHandler personaHandler)
         table.Expand();
         table.AddColumn(new("[yellow]Name[/]"));
         table.AddColumn(new("[yellow]Role[/]"));
-        table.AddColumn(new("[yellow]Main Goal[/]"));
+        table.AddColumn(new("[yellow]Main Objective[/]"));
         foreach (var persona in sortedPersonas)
-            table.AddRow(persona.Name, persona.Role, persona.Goals.FirstOrDefault() ?? "[red][Undefined][/]");
+            table.AddRow(persona.Name, persona.Role, persona.Objectives.FirstOrDefault() ?? "[red][Undefined][/]");
         Output.Write(table);
     }
 }

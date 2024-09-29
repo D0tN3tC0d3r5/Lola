@@ -8,7 +8,7 @@ public class PersonaHandler(IServiceProvider services, ILogger<PersonaHandler> l
     private readonly IModelHandler _modelHandler = services.GetRequiredService<IModelHandler>();
     private readonly IUserProfileHandler _userHandler = services.GetRequiredService<IUserProfileHandler>();
     private readonly IPersonaDataSource _dataSource = services.GetRequiredService<IPersonaDataSource>();
-    private readonly IJobHandler _jobHandler = services.GetRequiredService<IJobHandler>();
+    private readonly IGoalHandler _goalHandler = services.GetRequiredService<IGoalHandler>();
     private readonly IAgentAccessor _connectionAccessor = services.GetRequiredService<IAgentAccessor>();
 
     public PersonaEntity[] List() => _dataSource.GetAll();
@@ -53,7 +53,7 @@ public class PersonaHandler(IServiceProvider services, ILogger<PersonaHandler> l
             var httpConnection = _connectionAccessor.GetFor(appModel.Provider!.Name);
             var userProfileEntity = _userHandler.CurrentUser ?? throw new InvalidOperationException("No user found.");
             var personaEntity = GetById(1) ?? throw new InvalidOperationException("Required persona not found. Name: 'Agent Creator'.");
-            var taskEntity = _jobHandler.GetById(1) ?? throw new InvalidOperationException("Required task not found. Name: 'Ask Questions about the AI Agent'.");
+            var taskEntity = _goalHandler.GetById(1) ?? throw new InvalidOperationException("Required task not found. Name: 'Ask Questions about the AI Agent'.");
             var context = new JobContext {
                 Model = appModel,
                 Agent = httpConnection,
@@ -95,7 +95,7 @@ public class PersonaHandler(IServiceProvider services, ILogger<PersonaHandler> l
             var httpConnection = _connectionAccessor.GetFor(appModel.Provider!.Name);
             var userProfileEntity = _userHandler.CurrentUser ?? throw new InvalidOperationException("No user found.");
             var personaEntity = GetById(1) ?? throw new InvalidOperationException("Required persona not found. Name: 'Agent Creator'.");
-            var taskEntity = _jobHandler.GetById(2) ?? throw new InvalidOperationException("Required task not found. Name: 'Ask Questions about the AI Agent'.");
+            var taskEntity = _goalHandler.GetById(2) ?? throw new InvalidOperationException("Required task not found. Name: 'Ask Questions about the AI Agent'.");
             var context = new JobContext {
                 Model = appModel,
                 Agent = httpConnection,
@@ -119,13 +119,13 @@ public class PersonaHandler(IServiceProvider services, ILogger<PersonaHandler> l
                                });
             var result = await job.Execute(CancellationToken.None);
             if (result.HasException) throw new("Failed to generate next question: " + result.Exception.Message);
-            persona.Role = context.OutputAsMap.GetRequiredValueAs<string>(nameof(Persona.Role));
-            persona.Goals = context.OutputAsMap.GetRequiredList<string>(nameof(Persona.Goals));
-            persona.Expertise = context.OutputAsMap.GetRequiredValueAs<string>(nameof(Persona.Expertise));
-            persona.Characteristics = context.OutputAsMap.GetRequiredList<string>(nameof(Persona.Characteristics));
-            persona.Requirements = context.OutputAsMap.GetRequiredList<string>(nameof(Persona.Requirements));
-            persona.Restrictions = context.OutputAsMap.GetRequiredList<string>(nameof(Persona.Restrictions));
-            persona.Characteristics = context.OutputAsMap.GetRequiredList<string>(nameof(Persona.Traits));
+            persona.Role = context.OutputAsMap.GetRequiredValueAs<string>(nameof(PersonaEntity.Role));
+            persona.Objectives = context.OutputAsMap.GetRequiredList<string>(nameof(PersonaEntity.Objectives));
+            persona.Expertise = context.OutputAsMap.GetRequiredValueAs<string>(nameof(PersonaEntity.Expertise));
+            persona.Characteristics = context.OutputAsMap.GetRequiredList<string>(nameof(PersonaEntity.Characteristics));
+            persona.Requirements = context.OutputAsMap.GetRequiredList<string>(nameof(PersonaEntity.Requirements));
+            persona.Restrictions = context.OutputAsMap.GetRequiredList<string>(nameof(PersonaEntity.Restrictions));
+            persona.Characteristics = context.OutputAsMap.GetRequiredList<string>(nameof(PersonaEntity.Traits));
         }
         catch (Exception ex) {
             logger.LogError(ex, "Error generating next question for persona {PersonaName}", persona.Name);

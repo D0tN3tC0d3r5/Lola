@@ -46,22 +46,22 @@ public class UpdatePersona(IHasChildren parent, IPersonaHandler handler)
                                   .AddValidation(PersonaEntity.ValidateRole)
                                   .ShowAsync(ct);
 
-        // Update Goals
-        Output.WriteLine($"This persona has currently {persona.Goals.Count} goals.");
-        var goalCount = 0;
-        while (goalCount < persona.Goals.Count) {
-            persona.Goals[goalCount] = await Input.BuildMultilinePrompt($"- Goal {goalCount + 1}:")
-                                                  .WithDefault(persona.Goals[goalCount])
-                                                  .AddValidation(PersonaEntity.ValidateGoal)
+        // Update Objectives
+        Output.WriteLine($"This persona has currently {persona.Objectives.Count} objectives.");
+        var objectiveCount = 0;
+        while (objectiveCount < persona.Objectives.Count) {
+            persona.Objectives[objectiveCount] = await Input.BuildMultilinePrompt($"- Objective {objectiveCount + 1}:")
+                                                  .WithDefault(persona.Objectives[objectiveCount])
+                                                  .AddValidation(PersonaEntity.ValidateObjective)
                                                   .ShowAsync(ct);
-            goalCount++;
+            objectiveCount++;
         }
-        var addGoal = await Input.ConfirmAsync("Would you like to add another goal?", ct);
-        while (addGoal) {
-            persona.Goals[goalCount] = await Input.BuildMultilinePrompt($"- Goal {goalCount + 1}:")
-                                                  .AddValidation(PersonaEntity.ValidateGoal)
+        var addObjective = await Input.ConfirmAsync("Would you like to add another objective?", ct);
+        while (addObjective) {
+            persona.Objectives[objectiveCount] = await Input.BuildMultilinePrompt($"- Objective {objectiveCount + 1}:")
+                                                  .AddValidation(PersonaEntity.ValidateObjective)
                                                   .ShowAsync(ct);
-            addGoal = await Input.ConfirmAsync("Would you like to add another goal?", ct);
+            addObjective = await Input.ConfirmAsync("Would you like to add another objective?", ct);
         }
 
         // Update Expertise

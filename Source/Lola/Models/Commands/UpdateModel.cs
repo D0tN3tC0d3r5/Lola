@@ -31,13 +31,13 @@ public class UpdateModel(IHasChildren parent, IModelHandler modelHandler, IProvi
     }
 
     private async Task SetUpAsync(ModelEntity model, CancellationToken ct) {
-        var currentProvider = providerHandler.GetById(model.ProviderId);
-        var provider = await Input.BuildSelectionPrompt<ProviderEntity>("Select a provider:")
-                                  .ConvertWith(p => $"{p.Id}: {p.Name}")
-                                  .WithDefault(currentProvider!)
+        var currentProvider = providerHandler.Find(p => p.Id == model.ProviderId);
+        var provider = await Input.BuildSelectionPrompt<ProviderEntity>("Select a provider:", p => p.Id)
+                                  .DisplayAs(p => $"{p.Id}: {p.Name}")
+                                  .SetAsDefault(currentProvider!)
                                   .AddChoices(providerHandler.List())
                                   .ShowAsync(ct);
-        model.ProviderId = provider.Id;
+        model.ProviderId = provider!.Id;
 
         model.Key = await Input.BuildTextPrompt<string>("Enter the model identifier:")
                                .WithDefault(model.Key)

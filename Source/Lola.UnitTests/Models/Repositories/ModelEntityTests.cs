@@ -28,7 +28,7 @@ public class ModelEntityTests {
         };
 
         _mockModelHandler.Find(Arg.Any<Expression<Func<ModelEntity, bool>>>()).Returns((ModelEntity?)null);
-        _mockProviderHandler.GetById(Arg.Any<uint>()).Returns(new ProviderEntity());
+        _mockProviderHandler.Find(Arg.Any<Expression<Func<ProviderEntity, bool>>>()).Returns(new ProviderEntity());
 
         // Act
         var result = entity.Validate(_mockContext);
@@ -95,7 +95,7 @@ public class ModelEntityTests {
     public void ValidateProvider_WithNonExistentProvider_ShouldReturnError() {
         // Arrange
         const uint providerKey = 999;
-        _mockProviderHandler.GetById(providerKey).Returns((ProviderEntity)null!);
+        _mockProviderHandler.Find(Arg.Any<Expression<Func<ProviderEntity, bool>>>()).Returns((ProviderEntity)null!);
 
         // Act
         var result = ModelEntity.ValidateProvider(providerKey, _mockProviderHandler);

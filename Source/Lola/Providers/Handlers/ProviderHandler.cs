@@ -4,43 +4,62 @@ namespace Lola.Providers.Handlers;
 
 public class ProviderHandler(IProviderDataSource dataSource, Lazy<IModelHandler> modelHandler, ILogger<ProviderHandler> logger)
     : IProviderHandler {
-    public ProviderEntity[] List() => dataSource.GetAll();
+    public ProviderEntity[] List(Expression<Func<ProviderEntity, bool>>? predicate = null) => dataSource.GetAll(predicate);
 
-    public ProviderEntity? GetById(uint id) => dataSource.FindByKey(id);
+    public bool Exists(Expression<Func<ProviderEntity, bool>> predicate) => dataSource.Any(predicate);
     public ProviderEntity? Find(Expression<Func<ProviderEntity, bool>> predicate) => dataSource.Find(predicate);
 
     public void Add(ProviderEntity provider) {
-        if (GetById(provider.Id) != null)
-            throw new ValidationException($"A provider with the id '{provider.Id}' already exists.");
-
         var context = Map.FromMap([new(nameof(ProviderHandler), this)]);
         var result = dataSource.Add(provider, context);
         if (!result.IsSuccess)
             throw new ValidationException(result.Errors);
-        logger.LogInformation("Added new provider: {ProviderId} => {ProviderName}", provider.Name, provider.Id);
+        logger.LogInformation("Provider '{ProviderName} ({ProviderId})' added.", provider.Name, provider.Id);
     }
 
     public void Update(ProviderEntity provider) {
-        if (GetById(provider.Id) is null)
-            throw new ValidationException($"Provider with id '{provider.Id}' not found.");
-
+        EnsureExists(provider.Id);
         var context = Map.FromMap([new(nameof(ProviderHandler), this)]);
         var result = dataSource.Update(provider, context);
         if (!result.IsSuccess)
             throw new ValidationException(result.Errors);
-        logger.LogInformation("Updated provider: {ProviderId} => {ProviderName}", provider.Name, provider.Id);
+        logger.LogInformation("Provider '{ProviderName} ({ProviderId})' updated.", provider.Name, provider.Id);
     }
 
     public void Remove(uint id) {
-        var provider = GetById(id) ?? throw new ValidationException($"Provider with id '{id}' not found.");
-
-        var models = modelHandler.Value.List(provider.Id);
-        foreach (var model in models) {
+        var provider = EnsureExists(id);
+        foreach (var model in modelHandler.Value.List(p => p.ProviderId == provider.Id))
             modelHandler.Value.Remove(model.Id);
-        }
-        logger.LogInformation("Removed all models from provider: {ProviderId}", id);
+        logger.LogInformation("Provider '{ProviderName} ({ProviderId})' models removed.", provider.Name, provider.Id);
 
         dataSource.Remove(id);
-        logger.LogInformation("Removed provider: {ProviderId} => {ProviderName}", provider.Name, provider.Id);
+        logger.LogInformation("Provider '{ProviderName} ({ProviderId})' removed.", provider.Name, provider.Id);
     }
+
+    public void AddModel(uint id, ModelEntity model) {
+        EnsureExists(id);
+        model.ProviderId = id;
+        modelHandler.Value.Add(model);
+    }
+
+    public void RemoveModel(uint id, uint modelId) {
+        EnsureExists(id);
+        modelHandler.Value.Remove(modelId);
+    }
+
+    public void Enable(uint id) {
+        var provider = EnsureExists(id);
+        if (!provider.CanEnable) throw new ValidationException($"Provider '{id}' can't be enabled.");
+        provider.IsEnabled = true;
+        Update(provider);
+    }
+
+    public void Disable(uint id) {
+        var provider = EnsureExists(id);
+        provider.IsEnabled = false;
+        Update(provider);
+    }
+
+    private ProviderEntity EnsureExists(uint id)
+        => Find(p => p.Id == id) ?? throw new ValidationException($"Provider '{id}' not found.");
 }

@@ -1,6 +1,6 @@
 ﻿namespace Lola.Models.Commands;
 
-public class ViewModel(IHasChildren parent, IModelHandler handler, IProviderHandler providerHandler)
+public class ViewModel(IHasChildren parent, IModelHandler handler)
     : LolaCommand<ViewModel>(parent, "Info", n => {
         n.Aliases = ["i"];
         n.Description = "View model";
@@ -20,7 +20,7 @@ public class ViewModel(IHasChildren parent, IModelHandler handler, IProviderHand
             Logger.LogInformation("No model selected.");
             return Result.Success();
         }
-        model.Provider = providerHandler.GetById(model.ProviderId)!;
+        handler.IncludeProvider(model);
 
         ShowDetails(model);
 

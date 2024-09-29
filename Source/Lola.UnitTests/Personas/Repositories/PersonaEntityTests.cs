@@ -17,7 +17,7 @@ public class PersonaEntityTests {
             Id = 1,
             Name = "Test Persona",
             Role = "Test Role",
-            Goals = ["Goal 1"],
+            Objectives = ["Objective 1"],
         };
 
         _mockPersonaHandler.Find(Arg.Any<Expression<Func<PersonaEntity, bool>>>()).Returns((PersonaEntity?)null);
@@ -70,39 +70,39 @@ public class PersonaEntityTests {
     }
 
     [Fact]
-    public void ValidateGoal_WithNullOrEmptyGoal_ShouldReturnError() {
+    public void ValidateObjective_WithNullOrEmptyObjective_ShouldReturnError() {
         // Act
-        var result = PersonaEntity.ValidateGoal(null);
+        var result = PersonaEntity.ValidateObjective(null);
 
         // Assert
         result.IsInvalid.Should().BeTrue();
-        result.Errors.Should().Contain(e => e.Message == "The goal cannot be null or empty.");
+        result.Errors.Should().Contain(e => e.Message == "The objective cannot be null or empty.");
     }
 
     [Fact]
-    public void ValidateGoals_WithEmptyList_ShouldReturnError() {
+    public void ValidateObjectives_WithEmptyList_ShouldReturnError() {
         // Arrange
-        var goals = new List<string>();
+        var objectives = new List<string>();
 
         // Act
-        var result = PersonaEntity.ValidateGoals(goals);
+        var result = PersonaEntity.ValidateObjectives(objectives);
 
         // Assert
         result.IsInvalid.Should().BeTrue();
-        result.Errors.Should().Contain(e => e.Message == "At least one goal is required.");
+        result.Errors.Should().Contain(e => e.Message == "At least one objective is required.");
     }
 
     [Fact]
-    public void ValidateGoals_WithInvalidGoal_ShouldReturnError() {
+    public void ValidateObjectives_WithInvalidObjective_ShouldReturnError() {
         // Arrange
-        var goals = new List<string> { "Valid Goal", "" };
+        var objectives = new List<string> { "Valid Objective", "" };
 
         // Act
-        var result = PersonaEntity.ValidateGoals(goals);
+        var result = PersonaEntity.ValidateObjectives(objectives);
 
         // Assert
         result.IsInvalid.Should().BeTrue();
-        result.Errors.Should().Contain(e => e.Message == "The goal cannot be null or empty.");
+        result.Errors.Should().Contain(e => e.Message == "The objective cannot be null or empty.");
     }
 
     [Fact]
@@ -111,7 +111,7 @@ public class PersonaEntityTests {
         var entity = new PersonaEntity {
             Name = "Test Persona",
             Role = "Test Role",
-            Goals = ["Goal 1", "Goal 2"],
+            Objectives = ["Objective 1", "Objective 2"],
             Questions = [new() { Question = "Question 1" }],
         };
 
@@ -121,7 +121,7 @@ public class PersonaEntityTests {
         // Assert
         map["Name"].Should().Be(entity.Name);
         map["Role"].Should().Be(entity.Role);
-        map["Goals"].Should().BeEquivalentTo(entity.Goals);
+        map["Objectives"].Should().BeEquivalentTo(entity.Objectives);
         map["Questions"].Should().BeEquivalentTo(entity.Questions);
     }
 
@@ -132,7 +132,7 @@ public class PersonaEntityTests {
             Id = 1,
             Name = "Test Persona",
             Role = "Test Role",
-            Goals = ["Goal 1", "Goal 2"],
+            Objectives = ["Objective 1", "Objective 2"],
             Expertise = "Test Expertise",
             Characteristics = ["Characteristic 1", "Characteristic 2"],
             Requirements = ["Requirement 1"],
@@ -147,7 +147,7 @@ public class PersonaEntityTests {
         persona.Id.Should().Be(entity.Id);
         persona.Name.Should().Be(entity.Name);
         persona.Role.Should().Be(entity.Role);
-        persona.Goals.Should().BeEquivalentTo(entity.Goals);
+        persona.Goals.Should().BeEquivalentTo(entity.Objectives);
         persona.Expertise.Should().Be(entity.Expertise);
         persona.Characteristics.Should().BeEquivalentTo(entity.Characteristics);
         persona.Requirements.Should().BeEquivalentTo(entity.Requirements);

@@ -2,7 +2,7 @@
   {
     "Name": "Agent Creator",
     "Role": "AI Agent Description Specialist",
-    "Goals": [
+    "Objectives": [
       "create detailed, accurate, and tailored descriptions for various AI agents"
     ],
     "Questions": [],
@@ -35,7 +35,7 @@
   {
     "Name": "Master Coder",
     "Role": "Senior .NET C# Full-Stack Developer",
-    "Goals": [
+    "Objectives": [
       "Produce high-quality software according to the USER\u0027s requirements using the best coding practices."
     ],
     "Questions": [

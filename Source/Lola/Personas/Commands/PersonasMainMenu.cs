@@ -15,9 +15,9 @@ public class PersonasMainMenu(IHasChildren parent)
     }) {
     protected override async Task<Result> HandleCommandAsync(CancellationToken ct = default) {
         Logger.LogInformation("Executing Personas->Main command...");
-        var choice = await Input.BuildSelectionPrompt<string>("What would you like to do?")
-                                .ConvertWith(MapTo)
-                                .AddChoices(Commands.AsIndexed().OrderBy(i => i.Index).ToArray(c => c.Value.Name))
+        var choice = await Input.BuildSelectionPrompt("What would you like to do?")
+                                .DisplayAs(MapTo)
+                                .AddChoices(Commands.AsIndexed().OrderBy(i => i.Index).ToArray(c => c.Value.Name), ChoicePosition.AtEnd)
                                 .ShowAsync(ct);
 
         var command = Commands.FirstOrDefault(i => i.Name == choice);

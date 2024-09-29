@@ -21,7 +21,7 @@ public class ModelHandlerTests {
     [Fact]
     public void Selected_WhenNoSelectedModel_ShouldReturnNull() {
         // Arrange
-        _mockDataSource.GetSelected().Returns((ModelEntity?)null);
+        _mockDataSource.Find(Arg.Any<Expression<Func<ModelEntity, bool>>>()).Returns((ModelEntity?)null);
 
         // Act
         var result = _handler.Selected;
@@ -34,7 +34,7 @@ public class ModelHandlerTests {
     public void Selected_WhenSelectedModelExists_ShouldReturnModel() {
         // Arrange
         var expectedModel = new ModelEntity { Key = "model1", Name = "Test Model" };
-        _mockDataSource.GetSelected().Returns(expectedModel);
+        _mockDataSource.Find(Arg.Any<Expression<Func<ModelEntity, bool>>>()).Returns(expectedModel);
 
         // Act
         var result = _handler.Selected;
@@ -64,10 +64,10 @@ public class ModelHandlerTests {
     public void GetByKey_ShouldReturnCorrectModel() {
         // Arrange
         var expectedModel = new ModelEntity { Id = 1, Key = "model1", Name = "Test Model" };
-        _mockDataSource.FindById(1).Returns(expectedModel);
+        _mockDataSource.Find(Arg.Any<Expression<Func<ModelEntity, bool>>>()).Returns(expectedModel);
 
         // Act
-        var result = _handler.GetById(1);
+        var result = _handler.Find(m => m.Id == 1);
 
         // Assert
         result.Should().BeEquivalentTo(expectedModel);
@@ -90,7 +90,7 @@ public class ModelHandlerTests {
     public void Add_WhenModelAlreadyExists_ShouldThrowException() {
         // Arrange
         var model = new ModelEntity { Id = 1, Key = "model1", Name = "Test Model" };
-        _mockDataSource.FindById(1).Returns(model);
+        _mockDataSource.Find(Arg.Any<Expression<Func<ModelEntity, bool>>>()).Returns(model);
         _mockDataSource.Add(Arg.Any<ModelEntity>(), Arg.Any<IMap?>()).Returns(Result.Invalid("A model with the key 'model1' already exists."));
 
         // Act & Assert
@@ -103,7 +103,7 @@ public class ModelHandlerTests {
     public void Add_WhenModelIsNew_ShouldAddModelAndSetSelected() {
         // Arrange
         var model = new ModelEntity { Id = 1, Key = "model1", Name = "Test Model" };
-        _mockDataSource.FindById(1).Returns((ModelEntity?)null);
+        _mockDataSource.Find(Arg.Any<Expression<Func<ModelEntity, bool>>>()).Returns((ModelEntity?)null);
         _mockDataSource.Add(Arg.Any<ModelEntity>(), Arg.Any<IMap?>()).Returns(Result.Success());
 
         // Act
@@ -121,7 +121,7 @@ public class ModelHandlerTests {
     public void Update_WhenModelDoesNotExist_ShouldThrowException() {
         // Arrange
         var model = new ModelEntity { Id = 1, Key = "model1", Name = "Test Model" };
-        _mockDataSource.FindById(1).Returns((ModelEntity?)null);
+        _mockDataSource.Find(Arg.Any<Expression<Func<ModelEntity, bool>>>()).Returns((ModelEntity?)null);
 
         // Act & Assert
         _handler.Invoking(h => h.Update(model))
@@ -133,7 +133,7 @@ public class ModelHandlerTests {
     public void Update_WhenModelExists_ShouldUpdateModel() {
         // Arrange
         var model = new ModelEntity { Id = 1, Key = "model1", Name = "Test Model" };
-        _mockDataSource.FindById(1).Returns(model);
+        _mockDataSource.Find(Arg.Any<Expression<Func<ModelEntity, bool>>>()).Returns(model);
         _mockDataSource.Update(Arg.Any<ModelEntity>(), Arg.Any<IMap?>()).Returns(Result.Success());
 
         // Act
@@ -149,7 +149,7 @@ public class ModelHandlerTests {
     [Fact]
     public void Remove_WhenModelDoesNotExist_ShouldThrowException() {
         // Arrange
-        _mockDataSource.FindById(1, false).Returns((ModelEntity?)null);
+        _mockDataSource.Find(Arg.Any<Expression<Func<ModelEntity, bool>>>()).Returns((ModelEntity?)null);
 
         // Act & Assert
         _handler.Invoking(h => h.Remove(1))
@@ -161,7 +161,7 @@ public class ModelHandlerTests {
     public void Remove_WhenModelExists_ShouldRemoveModel() {
         // Arrange
         var model = new ModelEntity { Id = 1, Key = "model1", Name = "Test Model" };
-        _mockDataSource.FindById(1, false).Returns(model);
+        _mockDataSource.Find(Arg.Any<Expression<Func<ModelEntity, bool>>>()).Returns(model);
 
         // Act
         _handler.Remove(1);
@@ -193,7 +193,7 @@ public class ModelHandlerTests {
     [Fact]
     public void Select_WhenModelDoesNotExist_ShouldThrowException() {
         // Arrange
-        _mockDataSource.FindById(1).Returns((ModelEntity?)null);
+        _mockDataSource.Find(Arg.Any<Expression<Func<ModelEntity, bool>>>()).Returns((ModelEntity?)null);
 
         // Act & Assert
         _handler.Invoking(h => h.Select(1))
@@ -206,8 +206,7 @@ public class ModelHandlerTests {
         // Arrange
         var model = new ModelEntity { Id = 1, Key = "model1", Name = "Test Model" };
         _records.Add(model);
-        _mockDataSource.FindById(1).Returns(model);
-        _mockDataSource.GetSelected().Returns(model);
+        _mockDataSource.Find(Arg.Any<Expression<Func<ModelEntity, bool>>>()).Returns(model);
 
         // Act
         _handler.Select(1);

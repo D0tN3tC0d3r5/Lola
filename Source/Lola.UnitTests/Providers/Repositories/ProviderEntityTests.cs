@@ -61,7 +61,7 @@ public class ProviderEntityTests {
     [InlineData(" ", "The API Key is required.")]
     public void ValidateApiKey_WithInvalidApiKey_ShouldReturnError(string? apiKey, string expectedError) {
         // Act
-        var result = ProviderEntity.ValidateApiKey(apiKey);
+        var result = ProviderEntity.ValidateApiKey(null, apiKey, _mockProviderHandler);
 
         // Assert
         result.IsInvalid.Should().BeTrue();
@@ -74,7 +74,7 @@ public class ProviderEntityTests {
         const string apiKey = "valid-api-id";
 
         // Act
-        var result = ProviderEntity.ValidateApiKey(apiKey);
+        var result = ProviderEntity.ValidateApiKey(1, apiKey, _mockProviderHandler);
 
         // Assert
         result.IsSuccess.Should().BeTrue();

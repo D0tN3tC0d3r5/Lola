@@ -1,34 +1,31 @@
-using Lola.Jobs.Handlers;
-using Lola.Jobs.Repositories;
+namespace Lola.Goals.Repositories;
 
-namespace Lola.Tasks.Repositories;
-
-public class JobStorageTests {
+public class GoalStorageTests {
     [Fact]
     public void Constructor_ShouldInitializeCorrectly() {
         // Arrange
         var mockConfiguration = Substitute.For<IConfiguration>();
 
         // Act
-        var subject = new JobStorage(mockConfiguration);
+        var subject = new GoalStorage(mockConfiguration);
 
         // Assert
-        subject.Should().BeAssignableTo<IJobStorage>();
-        subject.Should().BeAssignableTo<JsonFilePerTypeStorage<JobEntity, uint>>();
+        subject.Should().BeAssignableTo<IGoalStorage>();
+        subject.Should().BeAssignableTo<JsonFilePerTypeStorage<GoalEntity, uint>>();
     }
 
     [Fact]
     public void Add_ShouldAssignIncrementalIds() {
         // Arrange
         var mockConfiguration = Substitute.For<IConfiguration>();
-        var taskHandler = Substitute.For<IJobHandler>();
+        var taskHandler = Substitute.For<IGoalHandler>();
         var context = new Map {
             [nameof(EntityAction)] = EntityAction.Insert,
-            [nameof(JobHandler)] = taskHandler,
+            [nameof(GoalHandler)] = taskHandler,
         };
-        var subject = new JobStorage(mockConfiguration);
-        var entity1 = new JobEntity { Name = "Alpha", Goals = ["Some goal."] };
-        var entity2 = new JobEntity { Name = "Bravo", Goals = ["Some goal."] };
+        var subject = new GoalStorage(mockConfiguration);
+        var entity1 = new GoalEntity { Name = "Alpha", Objectives = ["Some objective."] };
+        var entity2 = new GoalEntity { Name = "Bravo", Objectives = ["Some objective."] };
 
         // Act
         subject.Add(entity1, context);
@@ -43,14 +40,14 @@ public class JobStorageTests {
     public void GetAll_ShouldReturnEntitiesWithCorrectIds() {
         // Arrange
         var mockConfiguration = Substitute.For<IConfiguration>();
-        var taskHandler = Substitute.For<IJobHandler>();
+        var taskHandler = Substitute.For<IGoalHandler>();
         var context = new Map {
             [nameof(EntityAction)] = EntityAction.Insert,
-            [nameof(JobHandler)] = taskHandler,
+            [nameof(GoalHandler)] = taskHandler,
         };
-        var subject = new JobStorage(mockConfiguration);
-        var entity1 = new JobEntity { Name = "Alpha", Goals = ["Some goal."] };
-        var entity2 = new JobEntity { Name = "Bravo", Goals = ["Some goal."] };
+        var subject = new GoalStorage(mockConfiguration);
+        var entity1 = new GoalEntity { Name = "Alpha", Objectives = ["Some objective."] };
+        var entity2 = new GoalEntity { Name = "Bravo", Objectives = ["Some objective."] };
 
         // Act
         subject.Add(entity1, context);

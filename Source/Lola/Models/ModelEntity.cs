@@ -1,11 +1,11 @@
 ﻿using Model = DotNetToolbox.AI.Models.Model;
 
-namespace Lola.Models.Repositories;
+namespace Lola.Models;
 
 public class ModelEntity : Entity<ModelEntity, uint> {
     public uint ProviderId { get; set; }
     [JsonIgnore]
-    public ProviderEntity? Provider { get; set; }
+    public ProviderEntity? Provider { get; set; } // Navigation for contextual use only.
     public string Key { get; set; } = string.Empty;
     public string Name { get; set; } = string.Empty;
     public uint MaximumContextSize { get; set; }
@@ -32,7 +32,7 @@ public class ModelEntity : Entity<ModelEntity, uint> {
         if (string.IsNullOrWhiteSpace(key))
             result += new ValidationError("The key is required.", nameof(Key));
         else if (handler.Find(m => m.Key.Equals(key, StringComparison.OrdinalIgnoreCase) && (id == null || m.Id != id)) is not null)
-            result += new ValidationError("A model with this key is already registered.", nameof(Key));
+            result += new ValidationError("The model key must be unique. A model with this key is already registered.", nameof(Key));
         return result;
     }
 
@@ -41,13 +41,13 @@ public class ModelEntity : Entity<ModelEntity, uint> {
         if (string.IsNullOrWhiteSpace(name))
             result += new ValidationError("The name is required.", nameof(Name));
         else if (handler.Find(m => m.Name.Equals(name, StringComparison.OrdinalIgnoreCase) && (id == null || m.Id != id)) is not null)
-            result += new ValidationError("A model with this name is already registered.", nameof(Name));
+            result += new ValidationError("The model name must be unique. A model with this name is already registered.", nameof(Name));
         return result;
     }
 
-    public static Result ValidateProvider(uint providerId, IProviderHandler handler) {
+    public static Result ValidateProvider(uint providerId, IProviderHandler providerHandler) {
         var result = Result.Success();
-        if (handler.GetById(providerId) is null)
+        if (providerHandler.Find(p => p.Id == providerId) is null)
             result += new ValidationError("The provider does not exist.", nameof(ProviderId));
         return result;
     }
